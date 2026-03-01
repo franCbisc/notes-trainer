@@ -3,16 +3,17 @@
  */
 
 // ─── SVG Dimensions ───────────────────────────────────────────────────────────
-export const SVG_WIDTH = 380;
+export const SVG_WIDTH = 320;
 export const LINE_SPACING = 14;
 export const HALF_SPACING = LINE_SPACING / 2;
-export const STAFF_HEIGHT = 320;
+export const STAFF_HEIGHT = 280;
 export const LEFT_PADDING = 58;
 
 // ─── Note Head Dimensions ─────────────────────────────────────────────────────
-export const NOTE_HEAD_RX = 7;
-export const NOTE_HEAD_RY = 5.2;
-export const NOTE_X = 230;
+// bumped up by 1px per design request
+export const NOTE_HEAD_RX = 8;
+export const NOTE_HEAD_RY = 6.2;
+export const NOTE_X = 200;
 
 // ─── Staff Positions ─────────────────────────────────────────────────────────
 // Treble staff: center (terza linea = Si4) a y=90

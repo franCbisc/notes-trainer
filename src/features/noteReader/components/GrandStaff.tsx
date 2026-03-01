@@ -21,7 +21,6 @@ export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct }) 
             width={SVG_WIDTH}
             height={STAFF_HEIGHT}
             viewBox={`0 0 ${SVG_WIDTH} ${STAFF_HEIGHT}`}
-            style={{ display: "block" }}
         >
             {/* Brace connecting the two staves */}
             <Brace topY={topY} botY={botY} />

@@ -16,12 +16,12 @@ export const Brace: FC<BraceProps> = ({ topY, botY }) => {
     const lowerMidY = botY - h * 0.35;
     const lowerInnerY = botY - h * 0.18;
 
-    const midOut = 17;
-    const midIn = 16;
-    const endOut = 5;
-    const endIn = 0;
-    const hookOut = 2;
-    const hookDown = 8;
+    const midOut = 20;
+    const midIn = 10;
+    const endOut = 7;
+    const endIn = 9;
+    const hookOut = 1;
+    const hookDown = 4;
 
     const pathD = `M${x},${midY}
           C${x + midOut},${upperMidY} ${x - midIn},${upperInnerY} ${x},${topY}
