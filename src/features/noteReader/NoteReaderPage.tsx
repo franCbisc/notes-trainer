@@ -36,7 +36,7 @@ export const NoteReaderPage: FC = () => {
     }, [answered]);
 
     if (!current) {
-        return <div classNamse="root">Loading...</div>;
+        return <div className="root">Loading...</div>;
     }
 
     return (
