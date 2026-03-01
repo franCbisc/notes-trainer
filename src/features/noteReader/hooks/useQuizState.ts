@@ -2,7 +2,7 @@
  * Hook for managing quiz state (current note, answers, score)
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Note, AnswerStatus } from "../types";
 
 interface QuizScore {
@@ -32,7 +32,9 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
 
     const handleAnswer = useCallback(
         (name: string): boolean => {
-            if (answered || !current) return false;
+            if (answered || !current) {
+                return false;
+            }
 
             const isCorrect = name === current.name;
             setSelected(name);

@@ -21,18 +21,22 @@ export const NoteReaderPage: FC = () => {
         }
     }, [current, advance, generateRandomNote]);
 
-    // Auto-advance after correct answer (900ms delay for visual feedback)
+    // Auto-advance after answer
     useEffect(() => {
-        if (answered === "correct") {
+        if (answered !== null) {
+            const delay = answered === "correct" ? 300 : 800;
             const timer = setTimeout(() => {
                 advance(generateRandomNote());
-            }, 900);
-            return () => clearTimeout(timer);
+            }, delay);
+            return () => {
+                clearTimeout(timer);
+            };
         }
-    }, [answered, advance, generateRandomNote]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [answered]);
 
     if (!current) {
-        return <div className="root">Loading...</div>;
+        return <div classNamse="root">Loading...</div>;
     }
 
     return (
