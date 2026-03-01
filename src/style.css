@@ -1,0 +1,163 @@
+:root {
+  font-family: 'Georgia', serif;
+  color: #2c1a06;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+.root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdf6e3 0%, #f0e9d2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  font-family: 'Georgia', serif;
+  color: #2c1a06;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 2rem;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.sub {
+  margin: 4px 0 0;
+  color: #7a5c30;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.scoreRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  color: #5a3e1b;
+}
+
+.pct {
+  background: #c9a96e33;
+  border-radius: 12px;
+  padding: 2px 12px;
+  font-size: 0.9rem;
+}
+
+.resetBtn {
+  padding: 3px 14px;
+  border-radius: 12px;
+  border: 1px solid #c9a96e;
+  background: transparent;
+  color: #7a5c30;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.resetBtn:hover {
+  background: #c9a96e22;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 20px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  transition: all 0.3s;
+}
+
+.badgeTreble {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+}
+
+.badgeBass {
+  background: #e8eaf6;
+  border: 1px solid #9fa8da;
+  color: #283593;
+}
+
+.staffCard {
+  background: #fffdf7;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #c9a96e44;
+  border: 1px solid #e8d9b5;
+  padding: 12px 10px 6px;
+  margin-bottom: 16px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.feedback {
+  height: 28px;
+  margin-bottom: 14px;
+  font-size: 1rem;
+  transition: opacity 0.2s;
+  text-align: center;
+}
+
+.ok {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.wrong {
+  color: #dc2626;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  width: 360px;
+  max-width: 100%;
+}
+
+.btn {
+  padding: 14px 0;
+  border-radius: 12px;
+  border: 2px solid #c9a96e;
+  background: #fff;
+  color: #2c1a06;
+  font-size: 1.1rem;
+  font-family: Georgia, serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.btn:hover:not(:disabled) {
+  background: #faf8f0;
+  transform: translateY(-1px);
+}
+
+.btnCorrect {
+  background: #16a34a;
+  border: 2px solid #16a34a;
+  color: #fff;
+}
+
+.btnWrong {
+  background: #dc2626;
+  border: 2px solid #dc2626;
+  color: #fff;
+}
+
+.btnDim {
+  opacity: 0.4;
+  cursor: default;
+}
