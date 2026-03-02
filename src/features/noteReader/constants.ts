@@ -7,7 +7,7 @@ export const SVG_WIDTH = 320;
 export const LINE_SPACING = 14;
 export const HALF_SPACING = LINE_SPACING / 2;
 export const STAFF_HEIGHT = 280;
-export const LEFT_PADDING = 58;
+export const LEFT_PADDING = 20;
 
 // ─── Note Head Dimensions ─────────────────────────────────────────────────────
 // bumped up by 1px per design request

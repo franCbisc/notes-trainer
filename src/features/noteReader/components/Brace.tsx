@@ -8,7 +8,7 @@ import { COLORS } from "../constants";
 
 export const Brace: FC<BraceProps> = ({ topY, botY }) => {
     const h = botY - topY;
-    const x = 40;
+    const x = 6;
 
     const midY = topY + h / 2;
     const upperMidY = topY + h * 0.35;
