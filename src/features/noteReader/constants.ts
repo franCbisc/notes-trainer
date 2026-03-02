@@ -3,7 +3,7 @@
  */
 
 // ─── SVG Dimensions ───────────────────────────────────────────────────────────
-export const SVG_WIDTH = 360;
+export const SVG_WIDTH = 370;
 export const LINE_SPACING = 14;
 export const HALF_SPACING = LINE_SPACING / 2;
 export const STAFF_HEIGHT = 360;

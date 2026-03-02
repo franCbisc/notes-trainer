@@ -9,7 +9,7 @@ export const AnswersButtons: FC<AnswersButtonsProps> = ({
     onAnswer,
 }) => {
     return (
-        <div className="grid">
+        <div className="buttonsGrid">
             {noteNames.map((name: string) => {
                 const classes = ["btn"];
 

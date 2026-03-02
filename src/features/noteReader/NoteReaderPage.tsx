@@ -26,14 +26,14 @@ export const NoteReaderPage: FC = () => {
         if (answered !== null) {
             const delay = answered === "correct" ? 300 : 800;
             const timer = setTimeout(() => {
-                advance(generateRandomNote());
+                advance(generateRandomNote(current || undefined));
             }, delay);
             return () => {
                 clearTimeout(timer);
             };
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [answered]);
+    }, [answered, current]);
 
     if (!current) {
         return <div className="root">Loading...</div>;

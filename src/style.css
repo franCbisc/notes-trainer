@@ -91,11 +91,11 @@ body {
 
 .staffCard {
   background: #fffdf7;
-  border-radius: 16px;
+  border-radius: 5px;
   box-shadow: 0 4px 24px #c9a96e44;
   border: 1px solid #e8d9b5;
-  padding: 12px 10px 6px;
-  margin-bottom: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
   max-width: 100%;
   box-sizing: border-box;
   overflow: hidden;
@@ -118,7 +118,7 @@ body {
   color: #dc2626;
 }
 
-.grid {
+.buttonsGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   width: 400px;
