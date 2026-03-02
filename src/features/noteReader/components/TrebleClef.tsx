@@ -12,7 +12,7 @@ export const TrebleClef: FC<TrebleClefProps> = ({ cy }) => {
 
     return (
         <text
-            x={LEFT_PADDING + 10}
+            x={LEFT_PADDING + 15}
             y={textY}
             fontSize="35"
             fontFamily="'Noto Music', serif"

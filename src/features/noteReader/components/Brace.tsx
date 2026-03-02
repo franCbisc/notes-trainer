@@ -7,32 +7,31 @@ import { BraceProps } from "../types";
 import { COLORS } from "../constants";
 
 export const Brace: FC<BraceProps> = ({ topY, botY }) => {
-    const h = botY - topY;
-    const x = 6;
+    const height = botY - topY;
+    const x = 4; // padding from the left edge
 
-    const midY = topY + h / 2;
-    const upperMidY = topY + h * 0.35;
-    const upperInnerY = topY + h * 0.18;
-    const lowerMidY = botY - h * 0.35;
-    const lowerInnerY = botY - h * 0.18;
+    const BASE_SIZE = 50; // round reference size
+    // scale in y dimension so the glyph's em-box matches our required height
+    const scaleY = height / BASE_SIZE * 1.15;
 
-    const midOut = 20;
-    const midIn = 10;
-    const endOut = 7;
-    const endIn = 9;
-    const hookOut = 1;
-    const hookDown = 4;
-
-    const pathD = `M${x},${midY}
-          C${x + midOut},${upperMidY} ${x - midIn},${upperInnerY} ${x},${topY}
-          C${x + endOut},${topY} ${x + endOut},${topY} ${x + hookOut},${topY + hookDown}
-          C${x - endIn},${upperInnerY} ${x + midIn},${upperMidY} ${x},${midY}
-          C${x + midIn},${lowerMidY} ${x - endIn},${lowerInnerY} ${x + hookOut},${botY - hookDown}
-          C${x + endOut},${botY} ${x + endOut},${botY} ${x},${botY}
-          C${x - midIn},${lowerInnerY} ${x + midOut},${lowerMidY} ${x},${midY}
-          Z`;
-
-    return <path d={pathD} fill={COLORS.stroke.brace} />;
+    // We align the brace at the **top** of the staff; using a hanging baseline
+    // ensures the glyph's top sits exactly at the group origin. The vertical
+    // transform stretches it downward to reach botY.
+    return (
+        <g transform={`translate(${x},${topY}) scale(1,${scaleY})`}>            <text
+                x={0}
+                y={-2}
+                fontSize={BASE_SIZE}
+                fontFamily="serif"
+                fill={COLORS.stroke.brace}
+                textAnchor="start"
+                dominantBaseline="hanging"
+                style={{ userSelect: "none", pointerEvents: "none" }}
+            >
+                {'{'}
+            </text>
+        </g>
+    );
 };
 
 Brace.displayName = "Brace";
