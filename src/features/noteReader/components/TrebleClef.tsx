@@ -4,7 +4,7 @@
 
 import React, { FC } from "react";
 import { TrebleClefProps } from "../types";
-import { LEFT_PADDING, HALF_SPACING, COLORS } from "../constants";
+import { STAFF_PADDING, HALF_SPACING, COLORS } from "../constants";
 
 export const TrebleClef: FC<TrebleClefProps> = ({ cy }) => {
     const textY = cy + 15;
@@ -12,7 +12,7 @@ export const TrebleClef: FC<TrebleClefProps> = ({ cy }) => {
 
     return (
         <text
-            x={LEFT_PADDING + 15}
+            x={STAFF_PADDING + 15}
             y={textY}
             fontSize="35"
             fontFamily="'Noto Music', serif"
