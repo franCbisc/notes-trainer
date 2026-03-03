@@ -15,6 +15,7 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
     const [answered, setAnswered] = useState<AnswerStatus>(null);
     const [selected, setSelected] = useState<string | null>(null);
     const [score, setScore] = useState<QuizScore>({ correct: 0, total: 0 });
+    const [mode, setMode] = useState<"manual" | "automatic">("manual");
 
     const resetQuiz = useCallback(() => {
         setScore({ correct: 0, total: 0 });
@@ -64,6 +65,8 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
         handleAnswer,
         resetQuiz,
         percentage,
+        mode,
+        setMode,
     };
 }
 

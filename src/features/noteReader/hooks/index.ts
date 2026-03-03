@@ -4,4 +4,5 @@
 
 export { useNoteGeneration } from "./useNoteGeneration";
 export { useQuizState } from "./useQuizState";
+export { usePitchDetection } from "./usePitchDetection";
 

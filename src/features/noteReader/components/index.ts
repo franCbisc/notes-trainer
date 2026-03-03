@@ -4,3 +4,4 @@ export { NoteHead } from "./NoteHead";
 export { TrebleClef } from "./TrebleClef";
 export { BassClef } from "./BassClef";
 export { AnswersButtons } from "./AnswersButtons";
+export { ModeToggle } from "./ModeToggle";

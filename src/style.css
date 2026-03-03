@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Georgia', serif;
+  font-family: 'Helvetica';
   color: #2c1a06;
 }
 
@@ -10,12 +10,11 @@ body {
 
 .root {
   min-height: 100vh;
-  background: linear-gradient(135deg, #fdf6e3 0%, #f0e9d2 100%);
+  background: #f0f8ff;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 32px 16px;
-  font-family: 'Georgia', serif;
   color: #2c1a06;
 }
 
@@ -28,13 +27,6 @@ body {
   font-size: 2rem;
   margin: 0;
   letter-spacing: 0.04em;
-}
-
-.sub {
-  margin: 4px 0 0;
-  color: #7a5c30;
-  font-size: 0.95rem;
-  font-style: italic;
 }
 
 .scoreRow {
@@ -68,32 +60,11 @@ body {
   background: #c9a96e22;
 }
 
-.badge {
-  display: inline-block;
-  padding: 4px 20px;
-  border-radius: 20px;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  transition: all 0.3s;
-}
-
-.badgeTreble {
-  background: #e8f5e9;
-  border: 1px solid #a5d6a7;
-  color: #2e7d32;
-}
-
-.badgeBass {
-  background: #e8eaf6;
-  border: 1px solid #9fa8da;
-  color: #283593;
-}
-
 .staffCard {
-  background: #fffdf7;
+  background: #ffffff;
   border-radius: 5px;
   box-shadow: 0 4px 24px #c9a96e44;
-  border: 1px solid #e8d9b5;
+  border: 1px solid #636363;
   margin-top: 20px;
   margin-bottom: 10px;
   max-width: 100%;
@@ -126,13 +97,13 @@ body {
 }
 
 .btn {
-  padding: 14px 0;
-  border-radius: 12px;
-  border: 2px solid #c9a96e;
+  padding: 10px 0px;
+  border-radius: 60px;
+  border: 1px solid #696866;
   background: #fff;
   color: #2c1a06;
   font-size: 1.1rem;
-  font-family: Georgia, serif;
+  font-family: Helvetica;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.15s;
@@ -159,4 +130,90 @@ body {
 .btnDim {
   opacity: 0.4;
   cursor: default;
+}
+
+/* Mode Toggle Styles */
+.modeToggleContainer {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modeToggleLabel {
+  font-size: 0.95rem;
+  color: #5a3e1b;
+  font-weight: 500;
+}
+
+.modeToggleButtons {
+  display: flex;
+  gap: 6px;
+  border-radius: 8px;
+  background: #c9a96e22;
+  padding: 4px;
+}
+
+.modeBtn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #5a3e1b;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.modeBtn:hover:not(:disabled) {
+  background: #c9a96e33;
+}
+
+.modeBtnActive {
+  background: #c9a96e;
+  color: #fff;
+  font-weight: 600;
+}
+
+.modeBtnActive:hover {
+  background: #b59959;
+}
+
+.modeBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Listening Indicator */
+.listeningIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 60px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  color: #5a3e1b;
+}
+
+.listeningDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #16a34a;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
 }
