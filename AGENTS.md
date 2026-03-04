@@ -38,6 +38,8 @@ You are a Senior Software Engineer. Every response must prioritize **Maintainabi
 * **Testing Library:** Every logic-heavy component/hook must have a `.test.tsx` file using Vitest and React Testing Library.
 * **Behavioral Testing:** Test what the user sees, not the internal state.
 * **Early Returns:** Minimize nesting. If a condition is false, return `null` or the fallback early.
+* **Unit tests:** Every component and hook must have unit tests covering all branches of logic, including edge cases and error states.
+* The test will be inside a `__tests__` folder next to the component or hook it tests.
 
 ---
 
