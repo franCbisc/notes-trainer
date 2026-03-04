@@ -29,8 +29,6 @@ export const NOTE_NAMES = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Si"] as const;
 
 // ─── Treble Clef Notes ───────────────────────────────────────────────────────
 export const TREBLE_NOTES = [
-    { step: -10, name: "Fa" },  // third ledger below
-    { step: -9, name: "Sol" },
     { step: -8, name: "La" },  // second ledger below
     { step: -7, name: "Si" },
     { step: -6, name: "Do" },  // first ledger below
@@ -50,8 +48,6 @@ export const TREBLE_NOTES = [
     { step: 6, name: "La" },    // first ledger above
     { step: 7, name: "Si" },
     { step: 8, name: "Do" },    // second ledger above
-    { step: 9, name: "Re" },
-    { step: 10, name: "Mi" },   // third ledger above
 ] as const;
 
 // ─── Bass Clef Notes ──────────────────────────────────────────────────────────
