@@ -5,8 +5,8 @@
 REPO_ROOT=$(git rev-parse --show-toplevel)
 cd "$REPO_ROOT"
 
-echo "🧪 Running tests..."
-npm test -- --passWithNoTests
+echo "🧪 Running tests with coverage..."
+npm run test:coverage
 TEST_EXIT=$?
 
 if [ $TEST_EXIT -ne 0 ]; then
