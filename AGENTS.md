@@ -6,10 +6,10 @@ You are a Senior Software Engineer. Every response must prioritize **Maintainabi
 ---
 
 ## 1. SOLID Principles in React
-* **S (Single Responsibility):** Separate logic from UI. Logic goes into Custom Hooks; UI goes into "Atoms" or "Molecules".
+* **S (Single Responsibility):** Separate logic from UI. Components should only handle rendering. Logic (state, fetching, side-effects) must be extracted into Custom Hooks. A component should have only one reason to change (UI layout/style).
 * **O (Open/Closed):** Use Composition and Render Props. Components should be extendable via `props` without modifying their internal source code.
-* **L (Liskov Substitution):** Custom UI components (e.g., `Input`, `Button`) must extend and spread standard HTML attributes.
-* **I (Interface Segregation):** Components should only accept the specific props they need. Avoid passing giant "God Objects".
+* **L (Liskov Substitution):** Custom UI components (e.g., `Input`, `Button`) must extend and spread standard HTML attributes. Ensure that extending a component doesn't break the original contract of the base element.
+* **I (Interface Segregation):** Components should only accept the specific props they need. Avoid passing giant "God Objects" (e.g., a whole User object) if a component only needs user.avatarUrl. Pass primitive props or narrow interfaces to simplify testing and prevent unnecessary re-renders.
 * **D (Dependency Inversion):** Use Context or Providers to inject external dependencies (API clients, Analytics) rather than hard-coding them in components.
 
 ---
@@ -56,15 +56,33 @@ You are a Senior Software Engineer. Every response must prioritize **Maintainabi
 
 
 ## 5. Architecture (Feature-Based)
-Organize code by **Feature**, not by file type:
+This project uses a **Feature-Based** folder structure instead of by file type, grouping code by feature or domain. 
+Each folder contains everything related to that specific feature. Everything related to a feature lives in one place.
+
 ```text
 src/
- ├── features/
- │    └── [feature-name]/
- │         ├── components/
- │         ├── hooks/
- │         ├── api/
- │         └── types.ts
- ├── components/ (Global/Shared UI)
- ├── lib/        (Third-party configs)
- └── utils/      (Pure helper functions)
+├── features/
+│   ├── auth/
+│   │   ├── components/
+│   │   │   ├── LoginForm.tsx
+│   │   │   └── RegisterForm.tsx
+│   │   ├── hooks/
+│   │   │   └── useAuth.ts
+│   │   ├── services/
+│   │   │   └── authAPI.ts
+│   │   ├── store/
+│   │   │   └── authStore.ts
+│   │   ├── types/
+│   │   │   └── authType.ts
+│   │   └── index.tsx
+│   ├── dashboard/
+│   ├── settings/
+│   └── ...
+├── shared/
+│   ├── components/
+│   │   ├── Button.tsx
+│   │   └── Input.tsx
+│   ├── hooks/
+│   ├── store/
+│   ├── types/
+│   └── utils/

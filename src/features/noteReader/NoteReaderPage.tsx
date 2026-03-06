@@ -59,7 +59,7 @@ export const NoteReaderPage: FC = () => {
     return (
         <div className="root">
             <header className="header">
-                <h1 className="title">Notes reading trainer</h1>
+                <h1 className="title">Notes trainer</h1>
                 <ModeToggle mode={mode} onChange={setMode} />
             </header>
 
