@@ -3,3 +3,9 @@ dist/
 .DS_Store
 coverage/
 
+# TypeScript incremental build caches
+*.tsbuildinfo
+
+# Compiled Vite config outputs
+vite.config.js
+vite.config.d.ts
