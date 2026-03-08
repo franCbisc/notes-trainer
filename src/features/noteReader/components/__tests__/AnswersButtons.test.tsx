@@ -40,7 +40,23 @@ describe("AnswersButtons", () => {
         expect(onAnswer).toHaveBeenCalledWith("Re");
     });
 
-    it("disables all buttons when answered is set", () => {
+    it("disables all buttons when answered is 'correct'", () => {
+        render(
+            <AnswersButtons
+                noteNames={NOTE_NAMES}
+                current={currentNote}
+                selected="Si"
+                answered="correct"
+                onAnswer={jest.fn()}
+            />
+        );
+
+        NOTE_NAMES.forEach((name) => {
+            expect(screen.getByRole("button", { name })).toBeDisabled();
+        });
+    });
+
+    it("keeps buttons enabled when answered is 'wrong' (user can guess again)", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
@@ -52,7 +68,7 @@ describe("AnswersButtons", () => {
         );
 
         NOTE_NAMES.forEach((name) => {
-            expect(screen.getByRole("button", { name })).toBeDisabled();
+            expect(screen.getByRole("button", { name })).not.toBeDisabled();
         });
     });
 

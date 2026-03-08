@@ -44,21 +44,23 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
 
     const handleAnswer = useCallback(
         (name: string): boolean => {
-            if (answered || !current) {
+            if (answered === "correct" || !current) {
                 return false;
             }
 
             const isCorrect = name === current.name;
             setSelected(name);
-            setAnswered(isCorrect ? "correct" : "wrong");
-            setScore((s) => ({
-                correct: s.correct + (isCorrect ? 1 : 0),
-                total: s.total + 1,
-            }));
 
-            // In automatic mode a wrong answer is just a flash — reset state so
-            // the quiz keeps listening for the correct note without advancing.
-            if (!isCorrect && mode === "automatic") {
+            if (isCorrect) {
+                setAnswered("correct");
+                setScore((s) => ({
+                    correct: s.correct + 1,
+                    total: s.total + 1,
+                }));
+            } else {
+                // Manual mode: flash red then reset so the user can guess again.
+                // Automatic mode: same flash behaviour.
+                setAnswered("wrong");
                 wrongFlashTimerRef.current = setTimeout(() => {
                     wrongFlashTimerRef.current = null;
                     setAnswered(null);
@@ -68,7 +70,7 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
 
             return isCorrect;
         },
-        [answered, current, mode]
+        [answered, current]
     );
 
     const percentage = score.total > 0 ? Math.round((score.correct / score.total) * 100) : null;

@@ -47,18 +47,13 @@ export const NoteReaderPage: FC = () => {
         }
     }, [mode, detectedNote, answered, handleAnswer]);
 
-    // Advance to the next note after an answer.
-    // Manual mode:    correct → 300 ms, wrong → 1400 ms (show feedback then move on).
-    // Automatic mode: correct → 300 ms only — wrong answers reset inside useQuizState
-    //                 so the quiz keeps listening for the right note without advancing.
+    // Advance to the next note after a correct answer.
     useEffect(() => {
-        if (!answered) return;
-        if (mode === "automatic" && answered !== "correct") return;
+        if (answered !== "correct") return;
 
-        const delay = answered === "correct" ? 300 : 1400;
         const timer = setTimeout(() => {
             advance(generateRandomNote(current || undefined));
-        }, delay);
+        }, 300);
         return () => clearTimeout(timer);
     }, [answered]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -89,11 +84,8 @@ export const NoteReaderPage: FC = () => {
                 <GrandStaff current={current} answered={!!answered} correct={answered === "correct"} />
             </div>
 
-            {/* Feedback — manual: show correct note name; automatic: show what was played */}
+            {/* Feedback — automatic only: show what was played */}
             <div className="feedback" style={{ opacity: answered ? 1 : 0, pointerEvents: "none" }}>
-                {answered === "wrong" && mode === "manual" && (
-                    <span className="wrong">✗ It was <strong>{current.name}</strong></span>
-                )}
                 {answered === "wrong" && mode === "automatic" && (
                     <span className="wrong">✗ You played <strong>{selected}</strong></span>
                 )}

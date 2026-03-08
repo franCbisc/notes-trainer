@@ -22,7 +22,7 @@ export const AnswersButtons: FC<AnswersButtonsProps> = ({
                         key={name}
                         className={classes.join(" ")}
                         onClick={() => onAnswer(name)}
-                        disabled={!!answered}
+                        disabled={answered === "correct"}
                     >
                         {name}
                     </button>

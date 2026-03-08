@@ -2,18 +2,16 @@ import { act, renderHook } from "@testing-library/react";
 import { useQuizState } from "../useQuizState";
 
 describe("useQuizState", () => {
+    // ── basic state ────────────────────────────────────────────────────────────
+
     it("updates state correctly when advancing and answering correctly", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
+        act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
 
         let isCorrect = false;
-        act(() => {
-            isCorrect = result.current.handleAnswer("Do");
-        });
+        act(() => { isCorrect = result.current.handleAnswer("Do"); });
 
         expect(isCorrect).toBe(true);
         expect(result.current.score.total).toBe(1);
@@ -21,55 +19,42 @@ describe("useQuizState", () => {
         expect(result.current.answered).toBe("correct");
     });
 
-    it("records a wrong answer correctly", () => {
+    it("records a wrong answer: answered='wrong', score not incremented", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
+        act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
 
         let isCorrect = true;
-        act(() => {
-            isCorrect = result.current.handleAnswer("Re");
-        });
+        act(() => { isCorrect = result.current.handleAnswer("Re"); });
 
         expect(isCorrect).toBe(false);
-        expect(result.current.score.total).toBe(1);
+        expect(result.current.score.total).toBe(0);   // not counted until correct
         expect(result.current.score.correct).toBe(0);
         expect(result.current.answered).toBe("wrong");
         expect(result.current.selected).toBe("Re");
     });
 
-    it("returns false and does not update score when already answered", () => {
+    it("returns false and does not update score when answered is 'correct'", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Do"); // first answer
-        });
+        act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+        act(() => { result.current.handleAnswer("Do"); }); // correct → locked
 
         let secondResult = true;
-        act(() => {
-            secondResult = result.current.handleAnswer("Re"); // should be ignored
-        });
+        act(() => { secondResult = result.current.handleAnswer("Re"); });
 
         expect(secondResult).toBe(false);
-        expect(result.current.score.total).toBe(1); // not incremented again
+        expect(result.current.score.total).toBe(1);
     });
 
     it("returns false when current is null (no note set yet)", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        // current is null by default — handleAnswer should bail out
         let returned = true;
-        act(() => {
-            returned = result.current.handleAnswer("Do");
-        });
+        act(() => { returned = result.current.handleAnswer("Do"); });
 
         expect(returned).toBe(false);
         expect(result.current.score.total).toBe(0);
@@ -79,9 +64,7 @@ describe("useQuizState", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        act(() => {
-            result.current.resetQuiz();
-        });
+        act(() => { result.current.resetQuiz(); });
 
         expect(onNoteChange).toHaveBeenCalledWith({ step: 0, name: "Do", clef: "treble" });
     });
@@ -90,15 +73,9 @@ describe("useQuizState", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Do");
-        });
-        act(() => {
-            result.current.resetQuiz();
-        });
+        act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+        act(() => { result.current.handleAnswer("Do"); });
+        act(() => { result.current.resetQuiz(); });
 
         expect(result.current.score.correct).toBe(0);
         expect(result.current.score.total).toBe(0);
@@ -111,108 +88,130 @@ describe("useQuizState", () => {
         expect(result.current.percentage).toBeNull();
     });
 
-    it("percentage reflects the correct ratio", () => {
+    it("percentage reflects the correct ratio (only correct answers counted)", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Do"); // correct
-        });
-        act(() => {
-            result.current.advance({ step: 1, name: "Re", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Mi"); // wrong
-        });
+        jest.useFakeTimers();
 
-        expect(result.current.percentage).toBe(50);
+        // note 1 — answer correctly
+        act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+        act(() => { result.current.handleAnswer("Do"); }); // correct → total=1, correct=1
+
+        // note 2 — answer correctly
+        act(() => { result.current.advance({ step: 1, name: "Re", clef: "treble" }); });
+        act(() => { result.current.handleAnswer("Re"); }); // correct → total=2, correct=2
+
+        // note 3 — answer wrong (should not count)
+        act(() => { result.current.advance({ step: 2, name: "Mi", clef: "treble" }); });
+        act(() => { result.current.handleAnswer("Do"); }); // wrong — not counted
+        act(() => { jest.advanceTimersByTime(1000); });    // flash resets
+
+        jest.useRealTimers();
+
+        // 2 correct out of 2 total = 100%
+        expect(result.current.score.total).toBe(2);
+        expect(result.current.score.correct).toBe(2);
+        expect(result.current.percentage).toBe(100);
     });
 
     it("advance resets answered and selected", () => {
         const onNoteChange = jest.fn();
         const { result } = renderHook(() => useQuizState(onNoteChange));
 
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Re");
-        });
-        act(() => {
-            result.current.advance({ step: 1, name: "Re", clef: "treble" });
-        });
+        jest.useFakeTimers();
+        act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+        act(() => { result.current.handleAnswer("Re"); }); // wrong
+        act(() => { jest.advanceTimersByTime(1000); });   // flash resets
+        act(() => { result.current.advance({ step: 1, name: "Re", clef: "treble" }); });
+        jest.useRealTimers();
 
         expect(result.current.answered).toBeNull();
         expect(result.current.selected).toBeNull();
     });
 
-    // ── Automatic mode — wrong-flash behaviour ────────────────────────────────
+    // ── wrong-flash reset (both modes) ─────────────────────────────────────────
 
-    describe("automatic mode — wrong-flash reset", () => {
+    describe("wrong-flash reset", () => {
         beforeEach(() => jest.useFakeTimers());
         afterEach(() => jest.useRealTimers());
 
-        it("in automatic mode a wrong answer resets answered to null after 1000 ms", () => {
+        it("a wrong answer resets answered to null after 1000 ms (manual mode)", () => {
             const onNoteChange = jest.fn();
             const { result } = renderHook(() => useQuizState(onNoteChange));
 
-            act(() => result.current.setMode("automatic"));
-            act(() => result.current.advance({ step: 0, name: "Do", clef: "treble" }));
-            act(() => result.current.handleAnswer("Re")); // wrong
+            act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+            act(() => { result.current.handleAnswer("Re"); }); // wrong
 
             expect(result.current.answered).toBe("wrong");
 
-            act(() => jest.advanceTimersByTime(1000));
+            act(() => { jest.advanceTimersByTime(1000); });
 
             expect(result.current.answered).toBeNull();
             expect(result.current.selected).toBeNull();
         });
 
-        it("in automatic mode a wrong answer does not reset before 1000 ms", () => {
+        it("a wrong answer resets answered to null after 1000 ms (automatic mode)", () => {
             const onNoteChange = jest.fn();
             const { result } = renderHook(() => useQuizState(onNoteChange));
 
-            act(() => result.current.setMode("automatic"));
-            act(() => result.current.advance({ step: 0, name: "Do", clef: "treble" }));
-            act(() => result.current.handleAnswer("Re")); // wrong
+            act(() => { result.current.setMode("automatic"); });
+            act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+            act(() => { result.current.handleAnswer("Re"); }); // wrong
 
-            act(() => jest.advanceTimersByTime(999));
+            expect(result.current.answered).toBe("wrong");
+
+            act(() => { jest.advanceTimersByTime(1000); });
+
+            expect(result.current.answered).toBeNull();
+            expect(result.current.selected).toBeNull();
+        });
+
+        it("a wrong answer does not reset before 1000 ms", () => {
+            const onNoteChange = jest.fn();
+            const { result } = renderHook(() => useQuizState(onNoteChange));
+
+            act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+            act(() => { result.current.handleAnswer("Re"); }); // wrong
+
+            act(() => { jest.advanceTimersByTime(999); });
 
             expect(result.current.answered).toBe("wrong");
         });
 
-        it("in manual mode a wrong answer does NOT auto-reset", () => {
+        it("user can guess again in manual mode after the flash resets", () => {
             const onNoteChange = jest.fn();
             const { result } = renderHook(() => useQuizState(onNoteChange));
 
-            // mode defaults to "manual"
-            act(() => result.current.advance({ step: 0, name: "Do", clef: "treble" }));
-            act(() => result.current.handleAnswer("Re")); // wrong
+            act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+            act(() => { result.current.handleAnswer("Re"); }); // wrong
+            act(() => { jest.advanceTimersByTime(1000); });    // flash over
 
-            act(() => jest.advanceTimersByTime(2000));
+            expect(result.current.answered).toBeNull();
 
-            expect(result.current.answered).toBe("wrong");
+            // now guess correctly
+            let isCorrect = false;
+            act(() => { isCorrect = result.current.handleAnswer("Do"); });
+
+            expect(isCorrect).toBe(true);
+            expect(result.current.answered).toBe("correct");
+            expect(result.current.score.total).toBe(1);
+            expect(result.current.score.correct).toBe(1);
         });
 
         it("calling advance cancels a pending wrong-flash timer", () => {
             const onNoteChange = jest.fn();
             const { result } = renderHook(() => useQuizState(onNoteChange));
 
-            act(() => result.current.setMode("automatic"));
-            act(() => result.current.advance({ step: 0, name: "Do", clef: "treble" }));
-            act(() => result.current.handleAnswer("Re")); // wrong — timer starts
+            act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+            act(() => { result.current.handleAnswer("Re"); }); // wrong — timer starts
 
-            // Advance before timer fires
             act(() => {
                 jest.advanceTimersByTime(500);
                 result.current.advance({ step: 1, name: "Mi", clef: "treble" });
             });
 
-            // The timer should now be cancelled — state remains what advance set
-            act(() => jest.advanceTimersByTime(1000));
+            act(() => { jest.advanceTimersByTime(1000); });
 
             expect(result.current.answered).toBeNull();
             expect(result.current.current?.name).toBe("Mi");
@@ -222,183 +221,28 @@ describe("useQuizState", () => {
             const onNoteChange = jest.fn();
             const { result } = renderHook(() => useQuizState(onNoteChange));
 
-            act(() => result.current.setMode("automatic"));
-            act(() => result.current.advance({ step: 0, name: "Do", clef: "treble" }));
-            act(() => result.current.handleAnswer("Re")); // wrong — timer starts
+            act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+            act(() => { result.current.handleAnswer("Re"); }); // wrong — timer starts
+            act(() => { result.current.resetQuiz(); });
 
-            act(() => result.current.resetQuiz());
-
-            // Timer should be gone — score was reset
-            act(() => jest.advanceTimersByTime(2000));
+            act(() => { jest.advanceTimersByTime(2000); });
 
             expect(result.current.score.total).toBe(0);
         });
 
-        it("in automatic mode a correct answer does not trigger the flash timer", () => {
+        it("a correct answer does not trigger the flash timer", () => {
             const onNoteChange = jest.fn();
             const { result } = renderHook(() => useQuizState(onNoteChange));
 
-            act(() => result.current.setMode("automatic"));
-            act(() => result.current.advance({ step: 0, name: "Do", clef: "treble" }));
-            act(() => result.current.handleAnswer("Do")); // correct
+            act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
+            act(() => { result.current.handleAnswer("Do"); }); // correct
 
             expect(result.current.answered).toBe("correct");
 
-            // answered stays "correct" — no auto-reset
-            act(() => jest.advanceTimersByTime(2000));
+            act(() => { jest.advanceTimersByTime(2000); });
 
-            expect(result.current.answered).toBe("correct");
+            expect(result.current.answered).toBe("correct"); // stays locked
         });
-    });
-});
-
-
-describe("useQuizState", () => {
-    it("updates state correctly when advancing and answering correctly", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-
-        let isCorrect = false;
-        act(() => {
-            isCorrect = result.current.handleAnswer("Do");
-        });
-
-        expect(isCorrect).toBe(true);
-        expect(result.current.score.total).toBe(1);
-        expect(result.current.score.correct).toBe(1);
-        expect(result.current.answered).toBe("correct");
-    });
-
-    it("records a wrong answer correctly", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-
-        let isCorrect = true;
-        act(() => {
-            isCorrect = result.current.handleAnswer("Re");
-        });
-
-        expect(isCorrect).toBe(false);
-        expect(result.current.score.total).toBe(1);
-        expect(result.current.score.correct).toBe(0);
-        expect(result.current.answered).toBe("wrong");
-        expect(result.current.selected).toBe("Re");
-    });
-
-    it("returns false and does not update score when already answered", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Do"); // first answer
-        });
-
-        let secondResult = true;
-        act(() => {
-            secondResult = result.current.handleAnswer("Re"); // should be ignored
-        });
-
-        expect(secondResult).toBe(false);
-        expect(result.current.score.total).toBe(1); // not incremented again
-    });
-
-    it("returns false when current is null (no note set yet)", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        // current is null by default — handleAnswer should bail out
-        let returned = true;
-        act(() => {
-            returned = result.current.handleAnswer("Do");
-        });
-
-        expect(returned).toBe(false);
-        expect(result.current.score.total).toBe(0);
-    });
-
-    it("resetQuiz calls onNoteChange with the initial note", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        act(() => {
-            result.current.resetQuiz();
-        });
-
-        expect(onNoteChange).toHaveBeenCalledWith({ step: 0, name: "Do", clef: "treble" });
-    });
-
-    it("resetQuiz resets the score", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Do");
-        });
-        act(() => {
-            result.current.resetQuiz();
-        });
-
-        expect(result.current.score.correct).toBe(0);
-        expect(result.current.score.total).toBe(0);
-    });
-
-    it("percentage is null when no answers have been given", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        expect(result.current.percentage).toBeNull();
-    });
-
-    it("percentage reflects the correct ratio", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Do"); // correct
-        });
-        act(() => {
-            result.current.advance({ step: 1, name: "Re", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Mi"); // wrong
-        });
-
-        expect(result.current.percentage).toBe(50);
-    });
-
-    it("advance resets answered and selected", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
-
-        act(() => {
-            result.current.advance({ step: 0, name: "Do", clef: "treble" });
-        });
-        act(() => {
-            result.current.handleAnswer("Re");
-        });
-        act(() => {
-            result.current.advance({ step: 1, name: "Re", clef: "treble" });
-        });
-
-        expect(result.current.answered).toBeNull();
-        expect(result.current.selected).toBeNull();
     });
 });
 
