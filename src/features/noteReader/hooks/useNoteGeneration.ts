@@ -4,7 +4,7 @@
  */
 
 import { useCallback } from "react";
-import { Note, ClefFilter } from "../types";
+import { Note, ClefFilter, KeyAccidental } from "../types";
 import { TREBLE_NOTES, BASS_NOTES } from "../constants";
 
 function pickRandom<T>(arr: readonly T[]): T {
@@ -15,7 +15,18 @@ function isSamePosition(currentGenerated: Note, previous: Note): boolean {
     return currentGenerated.step === previous.step && currentGenerated.clef === previous.clef;
 }
 
-export function useNoteGeneration(clefFilter: ClefFilter = "both") {
+/**
+ * Apply key signature: if the note's base name matches an accidental in the key,
+ * append the accidental symbol to the name (e.g. "Fa" → "Fa#").
+ */
+function applyKeySignature(note: Note, keyAccidentals: KeyAccidental[]): Note {
+    const baseName = note.name.replace(/[#b]+$/, "");
+    const acc = keyAccidentals.find((a) => a.baseName === baseName);
+    if (!acc) return note;
+    return { ...note, name: baseName + acc.accidental };
+}
+
+export function useNoteGeneration(clefFilter: ClefFilter = "both", keyAccidentals: KeyAccidental[] = []) {
     const generateRandomNote = useCallback((previousNote?: Note): Note => {
         let note: Note;
         do {
@@ -30,9 +41,8 @@ export function useNoteGeneration(clefFilter: ClefFilter = "both") {
             note = { ...picked, clef };
         } while (previousNote && isSamePosition(note, previousNote));
 
-        return note;
-    }, [clefFilter]);
+        return applyKeySignature(note, keyAccidentals);
+    }, [clefFilter, keyAccidentals]);
 
     return { generateRandomNote };
 }
-

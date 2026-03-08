@@ -302,6 +302,46 @@ body {
   margin-top: 10px;
 }
 
+/* ─── Key selector ────────────────────────────────────────────────────────── */
+.keySelectorRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.keySelectorLabel {
+  font-size: 0.82rem;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.keySelectorSelect {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  appearance: auto;
+  transition: border-color 0.15s;
+}
+
+.keySelectorSelect:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.keySelectorSelect:hover {
+  border-color: var(--accent);
+}
+
 .clefToggleButtons {
   display: flex;
   gap: 4px;

@@ -6,3 +6,5 @@ export { BassClef } from "./BassClef";
 export { AnswersButtons } from "./AnswersButtons";
 export { ModeToggle } from "./ModeToggle";
 export { ClefToggle } from "./ClefToggle";
+export { KeySignatureAccidentals } from "./KeySignatureAccidentals";
+export { KeySelector } from "./KeySelector";

@@ -8,9 +8,10 @@ import { StaffLines } from "./StaffLines";
 import { NoteHead } from "./NoteHead";
 import { TrebleClef } from "./TrebleClef";
 import { BassClef } from "./BassClef";
+import { KeySignatureAccidentals } from "./KeySignatureAccidentals";
 import { SVG_WIDTH, STAFF_HEIGHT, STAFF_PADDING, TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../constants";
 
-export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct }) => {
+export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct, keyAccidentals = [] }) => {
     const topY = TREBLE_CY - 4 * HALF_SPACING;
     const botY = BASS_CY + 4 * HALF_SPACING;
 
@@ -31,6 +32,9 @@ export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct }) 
             <TrebleClef cy={TREBLE_CY} />
             <BassClef cy={BASS_CY} />
 
+            {/* Key signature accidentals */}
+            <KeySignatureAccidentals accidentals={keyAccidentals} />
+
             {/* Current note - rendered on the appropriate staff */}
             {current.clef === "treble" && (
                 <NoteHead step={current.step} cy={TREBLE_CY} answered={answered} correct={correct} />
@@ -43,4 +47,3 @@ export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct }) 
 };
 
 GrandStaff.displayName = "GrandStaff";
-

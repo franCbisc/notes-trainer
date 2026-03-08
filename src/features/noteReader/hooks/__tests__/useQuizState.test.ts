@@ -155,7 +155,6 @@ describe("useQuizState", () => {
             const onNoteChange = jest.fn();
             const { result } = renderHook(() => useQuizState(onNoteChange));
 
-            act(() => { result.current.setMode("automatic"); });
             act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
             act(() => { result.current.handleAnswer("Re"); }); // wrong
 

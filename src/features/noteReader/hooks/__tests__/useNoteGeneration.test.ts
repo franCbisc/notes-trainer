@@ -128,3 +128,68 @@ describe("useNoteGeneration", () => {
     });
 });
 
+// ─── key signature ────────────────────────────────────────────────────────────
+
+describe("useNoteGeneration – key signature", () => {
+    it("returns the base note name when it is not in the key signature", () => {
+        // index 0 in TREBLE_NOTES is La — not in a Fa# key
+        // treble filter skips the clef coin-flip, so only one random call (for index)
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(0);    // index 0 → La
+
+        const keyAccidentals = [{ baseName: "Fa", accidental: "#" as const, trebleStep: 4, bassStep: 2 }];
+        const { result } = renderHook(() => useNoteGeneration("treble", keyAccidentals));
+        const note = result.current.generateRandomNote();
+
+        expect(note.name).toBe("La");
+        spy.mockRestore();
+    });
+
+    it("appends # to the note name when the note is in the key signature", () => {
+        // Find the index of the first Fa in TREBLE_NOTES
+        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string }[];
+        const faIndex = trebleNotes.findIndex((n) => n.name === "Fa");
+        // Math.floor(random * length) === faIndex  →  random = faIndex / length
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(faIndex / trebleNotes.length);
+
+        const keyAccidentals = [{ baseName: "Fa", accidental: "#" as const, trebleStep: 4, bassStep: 2 }];
+        const { result } = renderHook(() => useNoteGeneration("treble", keyAccidentals));
+        const note = result.current.generateRandomNote();
+
+        expect(note.name).toBe("Fa#");
+        spy.mockRestore();
+    });
+
+    it("appends b to the note name when the note is in a flat key signature", () => {
+        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string }[];
+        const siIndex = trebleNotes.findIndex((n) => n.name === "Si");
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(siIndex / trebleNotes.length);
+
+        const keyAccidentals = [{ baseName: "Si", accidental: "b" as const, trebleStep: 0, bassStep: -2 }];
+        const { result } = renderHook(() => useNoteGeneration("treble", keyAccidentals));
+        const note = result.current.generateRandomNote();
+
+        expect(note.name).toBe("Sib");
+        spy.mockRestore();
+    });
+
+    it("strips a trailing accidental from note.name before matching baseName", () => {
+        // Simulate a note that already carries '#' (e.g. reprocessed after a key change).
+        // applyKeySignature must strip the '#' first, then match and re-apply correctly.
+        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string }[];
+        const faIndex = trebleNotes.findIndex((n) => n.name === "Fa");
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(faIndex / trebleNotes.length);
+
+        // Flat key after sharp: the pool still returns "Fa", but we want "Fab" not "Fa##"
+        const keyAccidentals = [{ baseName: "Fa", accidental: "b" as const, trebleStep: 4, bassStep: 2 }];
+        const { result } = renderHook(() => useNoteGeneration("treble", keyAccidentals));
+        const note = result.current.generateRandomNote();
+
+        expect(note.name).toBe("Fab");
+        spy.mockRestore();
+    });
+});
+

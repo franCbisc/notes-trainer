@@ -3,16 +3,22 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { GrandStaff, AnswersButtons, ModeToggle, ClefToggle } from "./components";
+import { GrandStaff, AnswersButtons, ModeToggle, ClefToggle, KeySelector } from "./components";
 import { useNoteGeneration, useQuizState, usePitchDetection } from "./hooks";
-import { NOTE_NAMES } from "./constants";
+import { NOTE_NAMES, KEY_SIGNATURES } from "./constants";
 import { ClefFilter } from "./types";
 import "../../style.css";
 
 export const NoteReaderPage: FC = () => {
     const [clefFilter, setClefFilter] = useState<ClefFilter>("both");
-    const { generateRandomNote } = useNoteGeneration(clefFilter);
-    const { current, answered, selected, score, advance, handleAnswer, resetQuiz, percentage, mode, setMode } =
+    const [selectedKey, setSelectedKey] = useState<string>("Do");
+    const [mode, setMode] = useState<"manual" | "automatic">("manual");
+
+    // Key accidentals only apply in automatic mode
+    const keyAccidentals = mode === "automatic" ? (KEY_SIGNATURES[selectedKey] ?? []) : [];
+
+    const { generateRandomNote } = useNoteGeneration(clefFilter, keyAccidentals);
+    const { current, answered, selected, score, advance, handleAnswer, resetQuiz, percentage } =
         useQuizState(generateRandomNote);
     const { detectedNote, detectedFrequency, clarity, isListening, permission, startListening, stopListening } =
         usePitchDetection();
@@ -29,6 +35,11 @@ export const NoteReaderPage: FC = () => {
         advance(generateRandomNote());
     }, [clefFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    // When the key changes, pick a fresh note so the displayed note reflects the new key
+    useEffect(() => {
+        advance(generateRandomNote());
+    }, [selectedKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
     // Handle mode changes
     useEffect(() => {
         if (mode === "automatic") {
@@ -36,11 +47,11 @@ export const NoteReaderPage: FC = () => {
         } else {
             stopListening();
         }
+        // Re-generate so the note name reflects the new mode's key context
+        advance(generateRandomNote());
     }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Automatic mode: feed each detected note into the quiz.
-    // handleAnswer is a no-op while `answered` is set, so rapid fire from the
-    // RAF loop is safe — only the first detection per note-on event goes through.
     useEffect(() => {
         if (mode === "automatic" && detectedNote && !answered) {
             handleAnswer(detectedNote);
@@ -72,6 +83,9 @@ export const NoteReaderPage: FC = () => {
                 <div className="clefFilterRow">
                     <ClefToggle clefFilter={clefFilter} onChange={setClefFilter} />
                 </div>
+                {mode === "automatic" && (
+                    <KeySelector selectedKey={selectedKey} onChange={setSelectedKey} />
+                )}
             </header>
 
             <div className="scoreRow">
@@ -81,7 +95,12 @@ export const NoteReaderPage: FC = () => {
             </div>
 
             <div className="staffCard">
-                <GrandStaff current={current} answered={!!answered} correct={answered === "correct"} />
+                <GrandStaff
+                    current={current}
+                    answered={!!answered}
+                    correct={answered === "correct"}
+                    keyAccidentals={keyAccidentals}
+                />
             </div>
 
             {/* Feedback — automatic only: show what was played */}

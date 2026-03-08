@@ -18,7 +18,6 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
     const [answered, setAnswered] = useState<AnswerStatus>(null);
     const [selected, setSelected] = useState<string | null>(null);
     const [score, setScore] = useState<QuizScore>({ correct: 0, total: 0 });
-    const [mode, setMode] = useState<"manual" | "automatic">("manual");
 
     /** Timer ref used to clear a pending wrong-flash reset. */
     const wrongFlashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -88,8 +87,6 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
         handleAnswer,
         resetQuiz,
         percentage,
-        mode,
-        setMode,
     };
 }
 
