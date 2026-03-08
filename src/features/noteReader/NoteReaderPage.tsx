@@ -2,14 +2,16 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useEffect } from "react";
-import { GrandStaff, AnswersButtons, ModeToggle } from "./components";
+import React, { FC, useEffect, useState } from "react";
+import { GrandStaff, AnswersButtons, ModeToggle, ClefToggle } from "./components";
 import { useNoteGeneration, useQuizState, usePitchDetection } from "./hooks";
 import { NOTE_NAMES } from "./constants";
+import { ClefFilter } from "./types";
 import "../../style.css";
 
 export const NoteReaderPage: FC = () => {
-    const { generateRandomNote } = useNoteGeneration();
+    const [clefFilter, setClefFilter] = useState<ClefFilter>("both");
+    const { generateRandomNote } = useNoteGeneration(clefFilter);
     const { current, answered, selected, score, advance, handleAnswer, resetQuiz, percentage, mode, setMode } =
         useQuizState(generateRandomNote);
     const { detectedNote, detectedFrequency, clarity, isListening, permission, startListening, stopListening } =
@@ -21,6 +23,11 @@ export const NoteReaderPage: FC = () => {
             advance(generateRandomNote());
         }
     }, [current, advance, generateRandomNote]);
+
+    // When the clef filter changes, immediately pick a fresh note from the new pool
+    useEffect(() => {
+        advance(generateRandomNote());
+    }, [clefFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Handle mode changes
     useEffect(() => {
@@ -67,6 +74,9 @@ export const NoteReaderPage: FC = () => {
             <header className="header">
                 <h1 className="title">Notes trainer</h1>
                 <ModeToggle mode={mode} onChange={setMode} />
+                <div className="clefFilterRow">
+                    <ClefToggle clefFilter={clefFilter} onChange={setClefFilter} />
+                </div>
             </header>
 
             <div className="scoreRow">

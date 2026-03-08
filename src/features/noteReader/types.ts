@@ -36,6 +36,8 @@ export interface GrandStaffProps {
 
 export type AnswerStatus = "correct" | "wrong" | null;
 
+export type ClefFilter = "both" | "treble" | "bass";
+
 export interface AnswersButtonsProps {
     noteNames: readonly string[];
     current: Note;

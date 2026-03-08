@@ -4,7 +4,7 @@
  */
 
 import { useCallback } from "react";
-import { Note } from "../types";
+import { Note, ClefFilter } from "../types";
 import { TREBLE_NOTES, BASS_NOTES } from "../constants";
 
 function pickRandom<T>(arr: readonly T[]): T {
@@ -15,19 +15,23 @@ function isSamePosition(currentGenerated: Note, previous: Note): boolean {
     return currentGenerated.step === previous.step && currentGenerated.clef === previous.clef;
 }
 
-export function useNoteGeneration() {
+export function useNoteGeneration(clefFilter: ClefFilter = "both") {
     const generateRandomNote = useCallback((previousNote?: Note): Note => {
         let note: Note;
         do {
-            let binaryRandom = Math.floor(Math.random() * 2); // 0/1
-            const clef = binaryRandom < 1 ? "treble" : "bass";
+            let clef: "treble" | "bass";
+            if (clefFilter === "treble" || clefFilter === "bass") {
+                clef = clefFilter;
+            } else {
+                clef = Math.random() < 0.5 ? "treble" : "bass";
+            }
             const notesPool = clef === "treble" ? TREBLE_NOTES : BASS_NOTES;
             const picked = pickRandom([...notesPool]);
             note = { ...picked, clef };
         } while (previousNote && isSamePosition(note, previousNote));
 
         return note;
-    }, []);
+    }, [clefFilter]);
 
     return { generateRandomNote };
 }

@@ -295,6 +295,51 @@ body {
   letter-spacing: 0.04em;
 }
 
+/* ─── Clef filter toggle ──────────────────────────────────────────────────── */
+.clefFilterRow {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.clefToggleButtons {
+  display: flex;
+  gap: 4px;
+  border-radius: 8px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  padding: 3px;
+}
+
+.clefBtn {
+  padding: 5px 14px;
+  border-radius: 5px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.clefBtn:hover {
+  color: var(--text);
+}
+
+.clefBtnActive {
+  background: var(--accent);
+  color: var(--surface);
+  font-weight: 600;
+}
+
+.clefBtnActive:hover {
+  background: var(--accent);
+  color: var(--surface);
+}
+
 /* ─── Mic permission prompt ───────────────────────────────────────────────── */
 .micPrompt {
   display: flex;
