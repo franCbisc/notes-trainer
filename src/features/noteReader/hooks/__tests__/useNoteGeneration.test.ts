@@ -52,5 +52,18 @@ describe("useNoteGeneration", () => {
         expect(note).toBeTruthy();
         expect(["treble", "bass"]).toContain(note.clef);
     });
+
+    it("generates a bass clef note when random >= 0.5", () => {
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(0.5) // clef: binaryRandom = 1 → bass
+            .mockReturnValueOnce(0);  // index: 0 → first bass note
+
+        const { result } = renderHook(() => useNoteGeneration());
+        const note = result.current.generateRandomNote();
+
+        expect(note.clef).toBe("bass");
+
+        spy.mockRestore();
+    });
 });
 

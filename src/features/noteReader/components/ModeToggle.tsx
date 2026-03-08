@@ -22,7 +22,7 @@ export const ModeToggle: FC<ModeToggleProps> = ({ mode, onChange, disabled = fal
                     onClick={() => onChange("automatic")}
                     disabled={disabled}
                 >
-                    Automatic (MVP)
+                    Automatic
                 </button>
             </div>
         </div>
