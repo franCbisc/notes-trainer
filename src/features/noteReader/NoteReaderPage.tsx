@@ -2,8 +2,8 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { GrandStaff, AnswersButtons, ModeToggle, ClefToggle, KeySelector } from "./components";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { GrandStaff, AnswersButtons, SettingsPanel } from "./components";
 import { useNoteGeneration, useQuizState, usePitchDetection } from "./hooks";
 import { NOTE_NAMES, KEY_SIGNATURES } from "./constants";
 import { ClefFilter } from "./types";
@@ -13,12 +13,14 @@ export const NoteReaderPage: FC = () => {
     const [clefFilter, setClefFilter] = useState<ClefFilter>("both");
     const [selectedKey, setSelectedKey] = useState<string>("Do");
     const [mode, setMode] = useState<"manual" | "automatic">("manual");
+    const [settingsOpen, setSettingsOpen] = useState(false);
+    const settingsBtnRef = useRef<HTMLButtonElement>(null);
 
     // Key accidentals only apply in automatic mode
     const keyAccidentals = mode === "automatic" ? (KEY_SIGNATURES[selectedKey] ?? []) : [];
 
     const { generateRandomNote } = useNoteGeneration(clefFilter, keyAccidentals);
-    const { current, answered, selected, score, advance, handleAnswer, resetQuiz, percentage } =
+    const { current, answered, selected, advance, handleAnswer } =
         useQuizState(generateRandomNote);
     const { detectedNote, detectedFrequency, clarity, isListening, permission, startListening, stopListening } =
         usePitchDetection();
@@ -78,21 +80,34 @@ export const NoteReaderPage: FC = () => {
     return (
         <div className="root">
             <header className="header">
-                <h1 className="title">Notes trainer</h1>
-                <ModeToggle mode={mode} onChange={setMode} />
-                <div className="clefFilterRow">
-                    <ClefToggle clefFilter={clefFilter} onChange={setClefFilter} />
+                <div className="settingsAnchor">
+                    <button
+                        ref={settingsBtnRef}
+                        className={`settingsBtn${settingsOpen ? " settingsBtnActive" : ""}`}
+                        onClick={() => setSettingsOpen((o) => !o)}
+                        aria-label="Settings"
+                        aria-expanded={settingsOpen}
+                    >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <rect x="2" y="4"  width="16" height="2" rx="1" fill="currentColor"/>
+                            <rect x="2" y="9"  width="16" height="2" rx="1" fill="currentColor"/>
+                            <rect x="2" y="14" width="16" height="2" rx="1" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <SettingsPanel
+                        open={settingsOpen}
+                        onClose={() => setSettingsOpen(false)}
+                        mode={mode}
+                        onModeChange={(m) => { setMode(m); setSettingsOpen(false); }}
+                        clefFilter={clefFilter}
+                        onClefChange={setClefFilter}
+                        selectedKey={selectedKey}
+                        onKeyChange={setSelectedKey}
+                    />
                 </div>
-                {mode === "automatic" && (
-                    <KeySelector selectedKey={selectedKey} onChange={setSelectedKey} />
-                )}
+                <h1 className="title">Notes trainer</h1>
+                <div className="headerSpacer" aria-hidden="true" />
             </header>
-
-            <div className="scoreRow">
-                <span>{score.correct} / {score.total}</span>
-                {percentage !== null && <span className="pct">{percentage}%</span>}
-                <button className="resetBtn" onClick={() => resetQuiz()}>Restart</button>
-            </div>
 
             <div className="staffCard">
                 <GrandStaff
