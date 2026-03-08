@@ -41,7 +41,7 @@ export const NoteReaderPage: FC = () => {
     // Auto-advance after answer
     useEffect(() => {
         if (answered !== null) {
-            const delay = answered === "correct" ? 300 : 1300;
+            const delay = answered === "correct" ? 300 : 1400;
             const timer = setTimeout(() => {
                 advance(generateRandomNote(current || undefined));
             }, delay);
@@ -79,7 +79,6 @@ export const NoteReaderPage: FC = () => {
 
             {/* Feedback message */}
             <div className="feedback" style={{ opacity: answered ? 1 : 0, pointerEvents: "none" }}>
-                {answered === "correct" && <span className="ok">✓ Correct!</span>}
                 {answered === "wrong" && (
                     <span className="wrong">
                         ✗ It was <strong>{current.name}</strong>

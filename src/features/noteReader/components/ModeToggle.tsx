@@ -9,7 +9,6 @@ interface ModeToggleProps {
 export const ModeToggle: FC<ModeToggleProps> = ({ mode, onChange, disabled = false }) => {
     return (
         <div className="modeToggleContainer">
-            <label className="modeToggleLabel">Mode:</label>
             <div className="modeToggleButtons">
                 <button
                     className={`modeBtn ${mode === "manual" ? "modeBtnActive" : ""}`}

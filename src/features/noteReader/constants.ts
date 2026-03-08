@@ -79,8 +79,8 @@ export const BASS_NOTES = [
 
 export const COLORS = {
     stroke: {
-        staff: "#666",
-        brace: "#333",
+        staff: "#888",
+        brace: "#888",
         stem: "#111",
     },
     noteHead: {

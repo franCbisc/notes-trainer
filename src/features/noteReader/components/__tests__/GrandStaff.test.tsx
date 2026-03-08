@@ -8,15 +8,14 @@ const trebleNote: Note = { step: 0, name: "Si", clef: "treble" };
 const bassNote: Note = { step: 0, name: "Do", clef: "bass" };
 
 describe("GrandStaff", () => {
-    it("renders an SVG element with the correct dimensions", () => {
+    it("renders an SVG element with the correct viewBox", () => {
         const { container } = render(
             <GrandStaff current={trebleNote} answered={false} correct={false} />
         );
 
         const svg = container.querySelector("svg");
         expect(svg).toBeInTheDocument();
-        expect(svg?.getAttribute("width")).toBe(String(SVG_WIDTH));
-        expect(svg?.getAttribute("height")).toBe(String(STAFF_HEIGHT));
+        expect(svg?.getAttribute("viewBox")).toBe(`0 0 ${SVG_WIDTH} ${STAFF_HEIGHT}`);
     });
 
     it("renders 10 staff lines (5 treble + 5 bass)", () => {

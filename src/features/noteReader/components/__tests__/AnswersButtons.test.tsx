@@ -56,13 +56,13 @@ describe("AnswersButtons", () => {
         });
     });
 
-    it("applies btnCorrect class to the correct note when answered", () => {
+    it("applies btnCorrect class to the selected note when the answer is correct", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
                 current={currentNote}
-                selected="Re"
-                answered="wrong"
+                selected="Si"
+                answered="correct"
                 onAnswer={jest.fn()}
             />
         );
@@ -84,7 +84,7 @@ describe("AnswersButtons", () => {
         expect(screen.getByRole("button", { name: "Re" })).toHaveClass("btnWrong");
     });
 
-    it("applies btnDim class to all other buttons when answered", () => {
+    it("does not apply any state class to unselected buttons when answered", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
@@ -95,9 +95,12 @@ describe("AnswersButtons", () => {
             />
         );
 
-        const dimmed = ["Do", "Mi", "Fa", "Sol", "La"];
-        dimmed.forEach((name) => {
-            expect(screen.getByRole("button", { name })).toHaveClass("btnDim");
+        const others = ["Do", "Mi", "Fa", "Sol", "La", "Si"];
+        others.forEach((name) => {
+            const btn = screen.getByRole("button", { name });
+            expect(btn).not.toHaveClass("btnCorrect");
+            expect(btn).not.toHaveClass("btnWrong");
+            expect(btn).not.toHaveClass("btnDim");
         });
     });
 

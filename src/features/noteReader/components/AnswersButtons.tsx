@@ -13,14 +13,8 @@ export const AnswersButtons: FC<AnswersButtonsProps> = ({
             {noteNames.map((name: string) => {
                 const classes = ["btn"];
 
-                if (selected) {
-                    if (name === current.name) {
-                        classes.push("btnCorrect");
-                    } else if (name === selected && answered === "wrong") {
-                        classes.push("btnWrong");
-                    } else {
-                        classes.push("btnDim");
-                    }
+                if (name === selected) {
+                    classes.push(answered === "wrong" ? "btnWrong" : "btnCorrect");
                 }
 
                 return (

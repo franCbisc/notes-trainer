@@ -8,7 +8,7 @@ import { StaffLines } from "./StaffLines";
 import { NoteHead } from "./NoteHead";
 import { TrebleClef } from "./TrebleClef";
 import { BassClef } from "./BassClef";
-import { SVG_WIDTH, STAFF_HEIGHT, STAFF_PADDING, TREBLE_CY, BASS_CY, HALF_SPACING } from "../constants";
+import { SVG_WIDTH, STAFF_HEIGHT, STAFF_PADDING, TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../constants";
 
 export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct }) => {
     const topY = TREBLE_CY - 4 * HALF_SPACING;
@@ -16,13 +16,12 @@ export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct }) 
 
     return (
         <svg
-            width={SVG_WIDTH}
-            height={STAFF_HEIGHT}
             viewBox={`0 0 ${SVG_WIDTH} ${STAFF_HEIGHT}`}
+            style={{ display: "block", width: "100%" }}
         >
 
             {/* Left vertical line connecting both staves */}
-            <line x1={STAFF_PADDING - 2} x2={STAFF_PADDING - 2} y1={topY} y2={botY} stroke="#444" strokeWidth="2" />
+            <line x1={STAFF_PADDING - 2} x2={STAFF_PADDING - 2} y1={topY} y2={botY} stroke={COLORS.stroke.brace} strokeWidth="2" />
 
             {/* Staff lines for both clefs */}
             <StaffLines cy={TREBLE_CY} />
