@@ -1,4 +1,4 @@
-import { frequencyToMidi, midiToNoteName, frequencyToNoteName, isPianoFrequency, PIANO_FREQ_MIN, PIANO_FREQ_MAX } from "../pitchUtils";
+import { frequencyToMidi, midiToNoteName, frequencyToNoteName, frequencyToNoteWithMidi, isPianoFrequency, PIANO_FREQ_MIN, PIANO_FREQ_MAX } from "../pitchUtils";
 
 describe("frequencyToMidi", () => {
     it("returns -1 for zero frequency", () => {
@@ -142,6 +142,32 @@ describe("frequencyToNoteName", () => {
 
     it("maps B4 (~493.88 Hz) to 'Si'", () => {
         expect(frequencyToNoteName(493.88)).toBe("Si");
+    });
+});
+
+describe("frequencyToNoteWithMidi", () => {
+    it("returns null for zero frequency", () => {
+        expect(frequencyToNoteWithMidi(0)).toBeNull();
+    });
+
+    it("returns null for negative frequency", () => {
+        expect(frequencyToNoteWithMidi(-1)).toBeNull();
+    });
+
+    it("maps A4 (440 Hz) to { name: 'La', midi: 69 }", () => {
+        expect(frequencyToNoteWithMidi(440)).toEqual({ name: "La", midi: 69 });
+    });
+
+    it("maps middle C (~261.63 Hz) to { name: 'Do', midi: 60 }", () => {
+        expect(frequencyToNoteWithMidi(261.63)).toEqual({ name: "Do", midi: 60 });
+    });
+
+    it("maps B4 (~493.88 Hz) to { name: 'Si', midi: 71 }", () => {
+        expect(frequencyToNoteWithMidi(493.88)).toEqual({ name: "Si", midi: 71 });
+    });
+
+    it("maps C5 (~523.25 Hz) to { name: 'Do', midi: 72 }", () => {
+        expect(frequencyToNoteWithMidi(523.25)).toEqual({ name: "Do", midi: 72 });
     });
 });
 

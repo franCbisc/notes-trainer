@@ -104,8 +104,8 @@ describe("SettingsPanel", () => {
             );
         };
         render(<Wrapper />);
-        fireEvent.change(screen.getByRole("combobox"), { target: { value: "Re" } });
-        expect(onKeyChange).toHaveBeenCalledWith("Re");
+        fireEvent.change(screen.getByRole("combobox"), { target: { value: "Re - Sim" } });
+        expect(onKeyChange).toHaveBeenCalledWith("Re - Sim");
     });
 
     // ── Outside click ─────────────────────────────────────────────────────────

@@ -96,7 +96,7 @@ export const SettingsPanel: FC<SettingsPanelProps> = ({
             {/* ── Key (automatic mode only) ────────────────────────────── */}
             {mode === "automatic" && (
                 <div className="settingsRow">
-                    <span className="settingsLabel">Key</span>
+                    <span className="settingsLabel">Key Signature</span>
                     <select
                         className="settingsSelect"
                         value={selectedKey}

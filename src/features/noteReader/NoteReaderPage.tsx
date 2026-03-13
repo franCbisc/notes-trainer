@@ -22,7 +22,7 @@ export const NoteReaderPage: FC = () => {
     const { generateRandomNote } = useNoteGeneration(clefFilter, keyAccidentals);
     const { current, answered, selected, advance, handleAnswer } =
         useQuizState(generateRandomNote);
-    const { detectedNote, detectedFrequency, clarity, isListening, permission, startListening, stopListening } =
+    const { detectedNote, detectedMidi, detectedFrequency, clarity, isListening, permission, startListening, stopListening } =
         usePitchDetection();
 
     // Initialize first note
@@ -56,9 +56,9 @@ export const NoteReaderPage: FC = () => {
     // Automatic mode: feed each detected note into the quiz.
     useEffect(() => {
         if (mode === "automatic" && detectedNote && !answered) {
-            handleAnswer(detectedNote);
+            handleAnswer(detectedNote, detectedMidi ?? undefined);
         }
-    }, [mode, detectedNote, answered, handleAnswer]);
+    }, [mode, detectedNote, detectedMidi, answered, handleAnswer]);
 
     // Advance to the next note after a correct answer.
     useEffect(() => {

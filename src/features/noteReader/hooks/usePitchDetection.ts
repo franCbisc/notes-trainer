@@ -13,7 +13,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { PitchDetector } from "pitchy";
 import { useMicrophone } from "./useMicrophone";
-import { frequencyToNoteName, isPianoFrequency, MIN_CLARITY, MIN_VOLUME_DB } from "../utils/pitchUtils";
+import { frequencyToNoteWithMidi, isPianoFrequency, MIN_CLARITY, MIN_VOLUME_DB } from "../utils/pitchUtils";
 
 /** Size of the FFT / analysis buffer.  Must be a power of 2. */
 const BUFFER_SIZE = 4096;
@@ -27,6 +27,7 @@ const STABLE_FRAMES = 6;
 
 export interface UsePitchDetectionReturn {
     detectedNote: string | null;
+    detectedMidi: number | null;
     detectedFrequency: number | null;
     clarity: number | null;
     isListening: boolean;
@@ -40,6 +41,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
 
     const [isListening, setIsListening] = useState(false);
     const [detectedNote, setDetectedNote] = useState<string | null>(null);
+    const [detectedMidi, setDetectedMidi] = useState<number | null>(null);
     const [detectedFrequency, setDetectedFrequency] = useState<number | null>(null);
     const [clarity, setClarity] = useState<number | null>(null);
 
@@ -72,6 +74,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         lastEmittedNoteRef.current = null;
         setIsListening(false);
         setDetectedNote(null);
+        setDetectedMidi(null);
         setDetectedFrequency(null);
         setClarity(null);
     }, []);
@@ -86,7 +89,9 @@ export function usePitchDetection(): UsePitchDetectionReturn {
                 const isValid = cl >= MIN_CLARITY && isPianoFrequency(freq);
 
                 if (isValid) {
-                    const note = frequencyToNoteName(freq);
+                    // isPianoFrequency already guarantees freq maps to a valid MIDI
+                    // so frequencyToNoteWithMidi is never null here.
+                    const { name: note, midi } = frequencyToNoteWithMidi(freq)!;
 
                     // Stability debounce: require STABLE_FRAMES consecutive frames
                     // of the same note before emitting it, and only emit once per
@@ -100,9 +105,10 @@ export function usePitchDetection(): UsePitchDetectionReturn {
 
                     if (candidateFramesRef.current >= STABLE_FRAMES && note !== lastEmittedNoteRef.current) {
                         lastEmittedNoteRef.current = note;
-                        console.debug(`[pitch] ${freq.toFixed(2)} Hz → ${note} (clarity: ${(cl * 100).toFixed(1)}%)`);
+                        console.debug(`[pitch] ${freq.toFixed(2)} Hz → ${note} MIDI ${midi} (clarity: ${(cl * 100).toFixed(1)}%)`);
                         setDetectedFrequency(freq);
                         setClarity(cl);
+                        setDetectedMidi(midi);
                         setDetectedNote(note);
                     }
                 } else {
@@ -113,6 +119,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
                     lastEmittedNoteRef.current = null;
                     setDetectedFrequency(null);
                     setClarity(null);
+                    setDetectedMidi(null);
                     setDetectedNote(null);
                 }
 
@@ -169,6 +176,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
 
     return {
         detectedNote,
+        detectedMidi,
         detectedFrequency,
         clarity,
         isListening,

@@ -107,6 +107,7 @@ describe("usePitchDetection", () => {
 
         expect(result.current.isListening).toBe(false);
         expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedMidi).toBeNull();
         expect(result.current.detectedFrequency).toBeNull();
         expect(result.current.clarity).toBeNull();
         expect(result.current.permission).toBe("idle");
@@ -139,6 +140,7 @@ describe("usePitchDetection", () => {
         expect(mockReleaseMic).toHaveBeenCalledTimes(1);
         expect(result.current.isListening).toBe(false);
         expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedMidi).toBeNull();
         expect(result.current.detectedFrequency).toBeNull();
         expect(result.current.clarity).toBeNull();
     });
@@ -206,6 +208,7 @@ describe("usePitchDetection", () => {
         }
 
         expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedMidi).toBe(69);
         expect(result.current.detectedFrequency).toBe(440);
         expect(result.current.clarity).toBe(0.95);
     });

@@ -27,9 +27,8 @@ export const KeySignatureAccidentals: FC<KeySignatureAccidentalsProps> = ({ acci
                 const trebleY = TREBLE_CY - acc.trebleStep * HALF_SPACING;
                 const bassY = BASS_CY - acc.bassStep * HALF_SPACING;
                 const glyph = acc.accidental === "#" ? "♯" : "♭";
-                // Flats sit a bit higher visually than sharps due to glyph shape
                 const dySharp = 5;
-                const dyFlat = 9;
+                const dyFlat = 5;
                 const dy = acc.accidental === "#" ? dySharp : dyFlat;
 
                 return (
@@ -38,7 +37,8 @@ export const KeySignatureAccidentals: FC<KeySignatureAccidentalsProps> = ({ acci
                             x={x}
                             y={trebleY + dy}
                             textAnchor="middle"
-                            fontSize="14"
+                            fontSize="19"
+                            fontWeight="bold"
                             fontFamily="serif"
                             fill={COLORS.text.dark}
                         >
@@ -48,7 +48,8 @@ export const KeySignatureAccidentals: FC<KeySignatureAccidentalsProps> = ({ acci
                             x={x}
                             y={bassY + dy}
                             textAnchor="middle"
-                            fontSize="14"
+                            fontSize="19"
+                            fontWeight="bold"
                             fontFamily="serif"
                             fill={COLORS.text.dark}
                         >

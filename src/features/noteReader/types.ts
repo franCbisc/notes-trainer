@@ -2,6 +2,8 @@ export interface Note {
     step: number;
     name: string;
     clef: "treble" | "bass";
+    /** MIDI note number for the specific octave shown on the staff (e.g. 60 = C4). */
+    midi: number;
 }
 
 export interface StaffLinesProps {

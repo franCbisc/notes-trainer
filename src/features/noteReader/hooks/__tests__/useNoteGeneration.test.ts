@@ -178,7 +178,7 @@ describe("useNoteGeneration – key signature", () => {
     it("strips a trailing accidental from note.name before matching baseName", () => {
         // Simulate a note that already carries '#' (e.g. reprocessed after a key change).
         // applyKeySignature must strip the '#' first, then match and re-apply correctly.
-        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string }[];
+        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string; midi: number }[];
         const faIndex = trebleNotes.findIndex((n) => n.name === "Fa");
         const spy = jest.spyOn(Math, "random")
             .mockReturnValueOnce(faIndex / trebleNotes.length);
@@ -190,6 +190,45 @@ describe("useNoteGeneration – key signature", () => {
 
         expect(note.name).toBe("Fab");
         spy.mockRestore();
+    });
+
+    it("shifts midi by +1 when applying a sharp accidental", () => {
+        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string; midi: number }[];
+        const faIndex = trebleNotes.findIndex((n) => n.name === "Fa");
+        const baseMidi = trebleNotes[faIndex].midi; // Fa4 = 65
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(faIndex / trebleNotes.length);
+
+        const keyAccidentals = [{ baseName: "Fa", accidental: "#" as const, trebleStep: 4, bassStep: 2 }];
+        const { result } = renderHook(() => useNoteGeneration("treble", keyAccidentals));
+        const note = result.current.generateRandomNote();
+
+        expect(note.name).toBe("Fa#");
+        expect(note.midi).toBe(baseMidi + 1); // Fa#4 = 66
+        spy.mockRestore();
+    });
+
+    it("shifts midi by -1 when applying a flat accidental", () => {
+        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string; midi: number }[];
+        const siIndex = trebleNotes.findIndex((n) => n.name === "Si");
+        const baseMidi = trebleNotes[siIndex].midi; // Si4 = 71
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(siIndex / trebleNotes.length);
+
+        const keyAccidentals = [{ baseName: "Si", accidental: "b" as const, trebleStep: 0, bassStep: -2 }];
+        const { result } = renderHook(() => useNoteGeneration("treble", keyAccidentals));
+        const note = result.current.generateRandomNote();
+
+        expect(note.name).toBe("Sib");
+        expect(note.midi).toBe(baseMidi - 1); // Sib4 = 70
+        spy.mockRestore();
+    });
+
+    it("generated note always has a midi field", () => {
+        const { result } = renderHook(() => useNoteGeneration("both"));
+        const note = result.current.generateRandomNote();
+        expect(typeof note.midi).toBe("number");
+        expect(note.midi).toBeGreaterThanOrEqual(0);
     });
 });
 

@@ -8,6 +8,47 @@ import { Note, AnswerStatus } from "../types";
 /** Duration (ms) of the wrong-answer flash before the quiz resumes listening. */
 const WRONG_FLASH_MS = 1000;
 
+/**
+ * Enharmonic equivalents in Italian notation (both directions).
+ * Sharp → flat  and  flat → sharp, so we can match either spelling.
+ */
+const ENHARMONIC_EQUIVALENTS: Record<string, string> = {
+    "Do#":  "Reb",
+    "Reb":  "Do#",
+    "Re#":  "Mib",
+    "Mib":  "Re#",
+    "Fa#":  "Solb",
+    "Solb": "Fa#",
+    "Sol#": "Lab",
+    "Lab":  "Sol#",
+    "La#":  "Sib",
+    "Sib":  "La#",
+    "Si#":  "Do",
+    "Dob":  "Si",
+};
+
+/**
+ * How many semitones away from the target MIDI the played note can be and
+ * still be considered "the same note in the right octave".
+ * 6 semitones = half an octave, so it accepts the note only within its own
+ * octave (e.g. Do4 accepts anything from Fa#3 to Fa#4, which practically
+ * means only Do4 itself since we already checked the name).
+ */
+const OCTAVE_TOLERANCE_SEMITONES = 6;
+
+/** Returns true when `played` is the same pitch as `target` (enharmonics included). */
+function isSamePitch(played: string, target: string): boolean {
+    return played === target || ENHARMONIC_EQUIVALENTS[played] === target;
+}
+
+/**
+ * Returns true when the played MIDI is within OCTAVE_TOLERANCE_SEMITONES of
+ * the target MIDI, meaning it is in the correct octave.
+ */
+function isCorrectOctave(playedMidi: number, targetMidi: number): boolean {
+    return Math.abs(playedMidi - targetMidi) <= OCTAVE_TOLERANCE_SEMITONES;
+}
+
 interface QuizScore {
     correct: number;
     total: number;
@@ -28,7 +69,7 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
             wrongFlashTimerRef.current = null;
         }
         setScore({ correct: 0, total: 0 });
-        onNoteChange({ step: 0, name: "Do", clef: "treble" });
+        onNoteChange({ step: -6, name: "Do", clef: "treble", midi: 60 });
     }, [onNoteChange]);
 
     const advance = useCallback((note: Note) => {
@@ -42,12 +83,14 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
     }, []);
 
     const handleAnswer = useCallback(
-        (name: string): boolean => {
+        (name: string, playedMidi?: number): boolean => {
             if (answered === "correct" || !current) {
                 return false;
             }
 
-            const isCorrect = name === current.name;
+            const nameMatches = isSamePitch(name, current.name);
+            const octaveMatches = playedMidi === undefined || isCorrectOctave(playedMidi, current.midi);
+            const isCorrect = nameMatches && octaveMatches;
             setSelected(name);
 
             if (isCorrect) {

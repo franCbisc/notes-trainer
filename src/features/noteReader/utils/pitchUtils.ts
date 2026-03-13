@@ -91,3 +91,14 @@ export function frequencyToNoteName(frequencyHz: number): string | null {
     return midiToNoteName(midi);
 }
 
+/**
+ * Converts a frequency in Hz to both an Italian note name and its exact MIDI number.
+ * Returns `null` when the frequency is invalid.
+ */
+export function frequencyToNoteWithMidi(frequencyHz: number): { name: string; midi: number } | null {
+    const midi = frequencyToMidi(frequencyHz);
+    const name = midiToNoteName(midi);
+    if (name === null) return null;
+    return { name, midi };
+}
+
