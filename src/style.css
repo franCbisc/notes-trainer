@@ -114,6 +114,12 @@ body {
   box-shadow: 0 4px 14px #b8892a40;
 }
 
+.settingsBtnActive:hover,
+.settingsBtnActive:active,
+.settingsBtnActive:focus {
+  color: #fff;
+}
+
 /* ─── Settings panel (slide-down drawer) ─────────────────────────────────── */
 .settingsPanel {
   position: absolute;
