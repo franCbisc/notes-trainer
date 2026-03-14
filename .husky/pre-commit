@@ -5,6 +5,17 @@
 REPO_ROOT=$(git rev-parse --show-toplevel)
 cd "$REPO_ROOT"
 
+echo "✓ Running format check..."
+npm run format:check
+FORMAT_CHECK_EXIT=$?
+
+if [ FORMAT_CHECK_EXIT -ne 0 ]; then
+  echo ""
+  echo "❌ Format check failed. Commit aborted."
+  echo "   Fix the format errors and try again."
+  exit 1
+fi
+
 echo "🧪 Running tests with coverage..."
 npm run test:coverage
 TEST_EXIT=$?

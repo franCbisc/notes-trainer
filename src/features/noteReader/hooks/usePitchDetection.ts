@@ -1,43 +1,63 @@
 /**
- * Hook for real-time pitch detection using the Web Audio API and pitchy (MPM algorithm).
+ * Hook for real-time pitch detection using the Web Audio API and pitchy (MPM).
  *
- * Flow:
- *   1. Consumer calls startListening() → requestMic() is called internally.
- *   2. Browser shows the permission prompt.
- *   3. On grant, an AnalyserNode is connected to the mic stream.
- *   4. A requestAnimationFrame loop reads PCM samples, feeds them to pitchy's
- *      PitchDetector and converts the detected frequency to an Italian note name.
- *   5. stopListening() tears everything down and releases the microphone.
+ * Model: a state machine with three explicit states:
+ *
+ *   IDLE
+ *     → stable note detected
+ *   EMITTED
+ *     → consumer calls consumeNote()
+ *   WAITING_FOR_SILENCE
+ *     → audio signal drops below threshold for N frames
+ *   IDLE  (ready for next note)
+ *
+ * The consumer drives the EMITTED → WAITING_FOR_SILENCE transition, not the
+ * audio signal. The detector will never re-fire until:
+ *   1. The parent explicitly acknowledges the note via consumeNote()
+ *   2. AND the piano string has actually stopped ringing (genuine silence)
  */
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { PitchDetector } from "pitchy";
 import { useMicrophone } from "./useMicrophone";
-import { frequencyToNoteWithMidi, isPianoFrequency, MIN_CLARITY, MIN_VOLUME_DB } from "../utils/pitchUtils";
+import {
+    frequencyToNoteWithMidi,
+    isPianoFrequency,
+    MIN_CLARITY,
+    MIN_VOLUME_DB,
+} from "../utils/pitchUtils";
+import {
+    BUFFER_SIZE,
+    DETECTION_INTERVAL_MS,
+    STABLE_FRAMES,
+    SILENCE_FRAMES_TO_REARM,
+    OCTAVE_HISTORY_SIZE,
+} from "./pitchDetectionConstants";
+import type { UsePitchDetectionReturn } from "../types";
 
-/** Size of the FFT / analysis buffer.  Must be a power of 2. */
-const BUFFER_SIZE = 4096;
+// ─── STATE MACHINE ────────────────────────────────────────────────────────────
+type DetectorState = "IDLE" | "EMITTED" | "WAITING_FOR_SILENCE";
 
-/**
- * Number of consecutive frames the same note must appear before it is emitted.
- * At 60 fps this is ~100 ms — long enough to ignore transient harmonics but
- * short enough to feel responsive on a piano attack.
- */
-const STABLE_FRAMES = 6;
+function median(arr: number[]): number {
+    const sorted = [...arr].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 !== 0
+        ? sorted[mid]
+        : (sorted[mid - 1] + sorted[mid]) / 2;
+}
 
-export interface UsePitchDetectionReturn {
-    detectedNote: string | null;
-    detectedMidi: number | null;
-    detectedFrequency: number | null;
-    clarity: number | null;
-    isListening: boolean;
-    permission: ReturnType<typeof useMicrophone>["permission"];
-    startListening: () => Promise<void>;
-    stopListening: () => void;
+function correctOctaveError(candidateMidi: number, history: number[]): number {
+    if (history.length < 3) return candidateMidi;
+    const med = median(history);
+    if (Math.abs(candidateMidi - med) === 12) {
+        return candidateMidi > med ? candidateMidi - 12 : candidateMidi + 12;
+    }
+    return candidateMidi;
 }
 
 export function usePitchDetection(): UsePitchDetectionReturn {
-    const { permission, audioContext, mediaStream, requestMic, releaseMic } = useMicrophone();
+    const { permission, audioContext, mediaStream, requestMic, releaseMic } =
+        useMicrophone();
 
     const [isListening, setIsListening] = useState(false);
     const [detectedNote, setDetectedNote] = useState<string | null>(null);
@@ -45,33 +65,36 @@ export function usePitchDetection(): UsePitchDetectionReturn {
     const [detectedFrequency, setDetectedFrequency] = useState<number | null>(null);
     const [clarity, setClarity] = useState<number | null>(null);
 
-    // Refs for the audio graph and animation loop
     const analyserRef = useRef<AnalyserNode | null>(null);
     const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
     const detectorRef = useRef<PitchDetector<Float32Array> | null>(null);
     const inputBufferRef = useRef<Float32Array | null>(null);
-    const rafIdRef = useRef<number | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    /** Candidate note accumulator for stability debounce. */
+    const stateRef = useRef<DetectorState>("IDLE");
     const candidateNoteRef = useRef<string | null>(null);
     const candidateFramesRef = useRef<number>(0);
-    /** The last note that was actually emitted (to suppress repeated triggers). */
-    const lastEmittedNoteRef = useRef<string | null>(null);
+    const silenceFramesRef = useRef<number>(0);
+    const midiHistoryRef = useRef<number[]>([]);
 
-    /** Tear down audio graph and cancel detection loop. */
+    // ── Teardown ──────────────────────────────────────────────────────────────
     const teardown = useCallback(() => {
-        if (rafIdRef.current !== null) {
-            cancelAnimationFrame(rafIdRef.current);
-            rafIdRef.current = null;
+        if (intervalRef.current !== null) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
         }
         sourceRef.current?.disconnect();
         sourceRef.current = null;
         analyserRef.current = null;
         detectorRef.current = null;
         inputBufferRef.current = null;
+
+        stateRef.current = "IDLE";
         candidateNoteRef.current = null;
         candidateFramesRef.current = 0;
-        lastEmittedNoteRef.current = null;
+        silenceFramesRef.current = 0;
+        midiHistoryRef.current = [];
+
         setIsListening(false);
         setDetectedNote(null);
         setDetectedMidi(null);
@@ -79,59 +102,114 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         setClarity(null);
     }, []);
 
-    /** Detection loop — runs every animation frame while listening. */
-    const startDetectionLoop = useCallback(
-        (analyser: AnalyserNode, detector: PitchDetector<Float32Array>, buffer: Float32Array, sampleRate: number) => {
-            const loop = () => {
-                analyser.getFloatTimeDomainData(buffer as unknown as Float32Array<ArrayBuffer>);
-                const [freq, cl] = detector.findPitch(buffer, sampleRate);
+    // ── consumeNote — parent calls this after handling the emitted note ────────
+    const consumeNote = useCallback(() => {
+        if (stateRef.current !== "EMITTED") return;
+        stateRef.current = "WAITING_FOR_SILENCE";
+        silenceFramesRef.current = 0;
+        candidateNoteRef.current = null;
+        candidateFramesRef.current = 0;
+        // Clear state so parent useEffect does not re-trigger
+        setDetectedNote(null);
+        setDetectedMidi(null);
+        setDetectedFrequency(null);
+        setClarity(null);
+    }, []);
 
+    // ── Detection loop ────────────────────────────────────────────────────────
+    const startDetectionLoop = useCallback(
+        (
+            analyser: AnalyserNode,
+            detector: PitchDetector<Float32Array>,
+            buffer: Float32Array,
+            sampleRate: number,
+        ) => {
+            intervalRef.current = setInterval(() => {
+                analyser.getFloatTimeDomainData(
+                    buffer as unknown as Float32Array<ArrayBuffer>,
+                );
+                const [freq, cl] = detector.findPitch(buffer, sampleRate);
                 const isValid = cl >= MIN_CLARITY && isPianoFrequency(freq);
 
-                if (isValid) {
-                    // isPianoFrequency already guarantees freq maps to a valid MIDI
-                    // so frequencyToNoteWithMidi is never null here.
-                    const { name: note, midi } = frequencyToNoteWithMidi(freq)!;
+                switch (stateRef.current) {
 
-                    // Stability debounce: require STABLE_FRAMES consecutive frames
-                    // of the same note before emitting it, and only emit once per
-                    // note-on event (suppress while the same note is held down).
-                    if (note === candidateNoteRef.current) {
-                        candidateFramesRef.current += 1;
-                    } else {
-                        candidateNoteRef.current = note;
-                        candidateFramesRef.current = 1;
+                    // ── IDLE: looking for a stable new note ───────────────────
+                    case "IDLE": {
+                        if (!isValid) {
+                            candidateNoteRef.current = null;
+                            candidateFramesRef.current = 0;
+                            break;
+                        }
+
+                        const raw = frequencyToNoteWithMidi(freq);
+                        if (!raw) break;
+
+                        const correctedMidi = correctOctaveError(
+                            raw.midi,
+                            midiHistoryRef.current,
+                        );
+                        midiHistoryRef.current = [
+                            ...midiHistoryRef.current.slice(-(OCTAVE_HISTORY_SIZE - 1)),
+                            correctedMidi,
+                        ];
+
+                        const correctedFreqName = frequencyToNoteWithMidi(
+                            440 * Math.pow(2, (correctedMidi - 69) / 12),
+                        )?.name;
+                        // istanbul ignore next — corrected piano MIDI always maps to a valid note
+                        const note = correctedMidi === raw.midi
+                            ? raw.name
+                            : (correctedFreqName ?? raw.name);
+
+                        if (note === candidateNoteRef.current) {
+                            candidateFramesRef.current += 1;
+                        } else {
+                            candidateNoteRef.current = note;
+                            candidateFramesRef.current = 1;
+                        }
+
+                        if (candidateFramesRef.current >= STABLE_FRAMES) {
+                            stateRef.current = "EMITTED";
+                            console.debug(
+                                `[pitch] ${freq.toFixed(1)} Hz → ${note} ` +
+                                `MIDI ${correctedMidi} (clarity ${(cl * 100).toFixed(1)}%)`,
+                            );
+                            setDetectedFrequency(freq);
+                            setClarity(cl);
+                            setDetectedMidi(correctedMidi);
+                            setDetectedNote(note);
+                        }
+                        break;
                     }
 
-                    if (candidateFramesRef.current >= STABLE_FRAMES && note !== lastEmittedNoteRef.current) {
-                        lastEmittedNoteRef.current = note;
-                        console.debug(`[pitch] ${freq.toFixed(2)} Hz → ${note} MIDI ${midi} (clarity: ${(cl * 100).toFixed(1)}%)`);
-                        setDetectedFrequency(freq);
-                        setClarity(cl);
-                        setDetectedMidi(midi);
-                        setDetectedNote(note);
+                    // ── EMITTED: waiting for parent to call consumeNote() ─────
+                    case "EMITTED": {
+                        // Do absolutely nothing — the parent is in control here.
+                        break;
                     }
-                } else {
-                    // Silence or non-piano sound: reset candidate and allow the
-                    // same note to be detected again next time the key is pressed.
-                    candidateNoteRef.current = null;
-                    candidateFramesRef.current = 0;
-                    lastEmittedNoteRef.current = null;
-                    setDetectedFrequency(null);
-                    setClarity(null);
-                    setDetectedMidi(null);
-                    setDetectedNote(null);
+
+                    // ── WAITING_FOR_SILENCE: note consumed, waiting for quiet ──
+                    case "WAITING_FOR_SILENCE": {
+                        if (!isValid) {
+                            silenceFramesRef.current += 1;
+                            if (silenceFramesRef.current >= SILENCE_FRAMES_TO_REARM) {
+                                stateRef.current = "IDLE";
+                                silenceFramesRef.current = 0;
+                                midiHistoryRef.current = [];
+                            }
+                        } else {
+                            // String still ringing — keep waiting
+                            silenceFramesRef.current = 0;
+                        }
+                        break;
+                    }
                 }
-
-                rafIdRef.current = requestAnimationFrame(loop);
-            };
-
-            rafIdRef.current = requestAnimationFrame(loop);
+            }, DETECTION_INTERVAL_MS);
         },
-        []
+        [],
     );
 
-    /** Build the audio graph once we have a granted mic + AudioContext. */
+    // ── Build audio graph once mic is granted ─────────────────────────────────
     useEffect(() => {
         if (!isListening || !audioContext || !mediaStream) return;
 
@@ -154,9 +232,9 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         startDetectionLoop(analyser, detector, inputBuffer, audioContext.sampleRate);
 
         return () => {
-            if (rafIdRef.current !== null) {
-                cancelAnimationFrame(rafIdRef.current);
-                rafIdRef.current = null;
+            if (intervalRef.current !== null) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
             }
             source.disconnect();
         };
@@ -164,8 +242,6 @@ export function usePitchDetection(): UsePitchDetectionReturn {
 
     const startListening = useCallback(async () => {
         await requestMic();
-        // isListening is set to true only after permission is granted —
-        // the effect above will react to the audioContext/mediaStream change.
         setIsListening(true);
     }, [requestMic]);
 
@@ -183,5 +259,6 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         permission,
         startListening,
         stopListening,
+        consumeNote,
     };
 }

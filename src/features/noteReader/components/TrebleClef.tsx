@@ -4,7 +4,7 @@
 
 import React, { FC } from "react";
 import { TrebleClefProps } from "../types";
-import { STAFF_PADDING, HALF_SPACING, COLORS } from "../constants";
+import { STAFF_PADDING, COLORS } from "../constants";
 
 export const TrebleClef: FC<TrebleClefProps> = ({ cy }) => {
     const textY = cy + 15;

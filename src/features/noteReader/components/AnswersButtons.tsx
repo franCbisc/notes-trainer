@@ -3,7 +3,6 @@ import { AnswersButtonsProps } from "../types";
 
 export const AnswersButtons: FC<AnswersButtonsProps> = ({
     noteNames,
-    current,
     selected,
     answered,
     onAnswer,

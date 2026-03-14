@@ -1,3 +1,5 @@
+import type { useMicrophone } from "./hooks/useMicrophone";
+
 export interface Note {
     step: number;
     name: string;
@@ -43,10 +45,21 @@ export type ClefFilter = "both" | "treble" | "bass";
 
 export interface AnswersButtonsProps {
     noteNames: readonly string[];
-    current: Note;
     selected: string | null;
     answered: AnswerStatus;
     onAnswer: (name: string) => void;
+}
+
+export interface UsePitchDetectionReturn {
+    detectedNote: string | null;
+    detectedMidi: number | null;
+    detectedFrequency: number | null;
+    clarity: number | null;
+    isListening: boolean;
+    permission: ReturnType<typeof useMicrophone>["permission"];
+    startListening: () => Promise<void>;
+    stopListening: () => void;
+    consumeNote: () => void;
 }
 
 /** A single accidental in a key signature */
