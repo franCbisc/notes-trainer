@@ -22,7 +22,7 @@ export const NoteReaderPage: FC = () => {
     const { generateRandomNote } = useNoteGeneration(clefFilter, keyAccidentals);
     const { current, answered, selected, advance, handleAnswer } =
         useQuizState(generateRandomNote);
-    const { detectedNote, detectedMidi, detectedFrequency, clarity, isListening, permission, startListening, stopListening, consumeNote } =
+    const { detectedPitch, isListening, permission, startListening, stopListening, consumeNote } =
         usePitchDetection();
 
     // Initialize first note
@@ -55,11 +55,11 @@ export const NoteReaderPage: FC = () => {
 
     // Automatic mode: feed each detected note into the quiz.
     useEffect(() => {
-        if (mode === "automatic" && detectedNote && !answered) {
-            handleAnswer(detectedNote, detectedMidi ?? undefined);
+        if (mode === "automatic" && detectedPitch && !answered) {
+            handleAnswer(detectedPitch.note, detectedPitch.midi);
             consumeNote();
         }
-    }, [mode, detectedNote, detectedMidi, answered, handleAnswer, consumeNote]);
+    }, [mode, detectedPitch, answered, handleAnswer, consumeNote]);
 
     // Advance to the next note after a correct answer.
     useEffect(() => {
@@ -114,9 +114,9 @@ export const NoteReaderPage: FC = () => {
                 <div className="listeningIndicator">
                     {isListening && <span className="listeningDot" />}
                     <span>{isListening ? "Listening…" : "Ready"}</span>
-                    {detectedFrequency !== null && clarity !== null && (
+                    {detectedPitch && (
                         <span className="pitchDebug">
-                            {Math.round(detectedFrequency)} Hz · {Math.round(clarity * 100)}%
+                            {Math.round(detectedPitch.frequency)} Hz · {Math.round(detectedPitch.clarity * 100)}%
                         </span>
                     )}
                 </div>

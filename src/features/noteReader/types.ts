@@ -50,11 +50,15 @@ export interface AnswersButtonsProps {
     onAnswer: (name: string) => void;
 }
 
+export interface DetectedPitch {
+    note: string;
+    midi: number;
+    frequency: number;
+    clarity: number;
+}
+
 export interface UsePitchDetectionReturn {
-    detectedNote: string | null;
-    detectedMidi: number | null;
-    detectedFrequency: number | null;
-    clarity: number | null;
+    detectedPitch: DetectedPitch | null;
     isListening: boolean;
     permission: ReturnType<typeof useMicrophone>["permission"];
     startListening: () => Promise<void>;

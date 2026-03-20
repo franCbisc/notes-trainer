@@ -108,10 +108,7 @@ describe("usePitchDetection", () => {
         const { result } = renderHook(() => usePitchDetection());
 
         expect(result.current.isListening).toBe(false);
-        expect(result.current.detectedNote).toBeNull();
-        expect(result.current.detectedMidi).toBeNull();
-        expect(result.current.detectedFrequency).toBeNull();
-        expect(result.current.clarity).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
         expect(result.current.permission).toBe("idle");
     });
 
@@ -141,10 +138,7 @@ describe("usePitchDetection", () => {
 
         expect(mockReleaseMic).toHaveBeenCalledTimes(1);
         expect(result.current.isListening).toBe(false);
-        expect(result.current.detectedNote).toBeNull();
-        expect(result.current.detectedMidi).toBeNull();
-        expect(result.current.detectedFrequency).toBeNull();
-        expect(result.current.clarity).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
     });
 
     it("does not start detection loop when audioContext/mediaStream are null", async () => {
@@ -159,7 +153,7 @@ describe("usePitchDetection", () => {
         tickFrames(1);
 
         expect(mockFindPitch).not.toHaveBeenCalled();
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
     });
 
     it("starts detection loop when audioContext and mediaStream are available", async () => {
@@ -203,10 +197,12 @@ describe("usePitchDetection", () => {
         // Need STABLE_FRAMES consecutive frames before the note is emitted
         tickFrames(STABLE_FRAMES);
 
-        expect(result.current.detectedNote).toBe("La");
-        expect(result.current.detectedMidi).toBe(69);
-        expect(result.current.detectedFrequency).toBe(440);
-        expect(result.current.clarity).toBe(0.95);
+        expect(result.current.detectedPitch).toEqual({
+            note: "La",
+            midi: 69,
+            frequency: 440,
+            clarity: 0.95,
+        });
     });
 
     it("clears note/frequency/clarity when clarity is below threshold", async () => {
@@ -228,9 +224,7 @@ describe("usePitchDetection", () => {
 
         tickFrames(1);
 
-        expect(result.current.detectedNote).toBeNull();
-        expect(result.current.detectedFrequency).toBeNull();
-        expect(result.current.clarity).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
     });
 
     it("stopListening cancels the interval when detection loop is active", async () => {
@@ -299,8 +293,7 @@ describe("usePitchDetection", () => {
 
         tickFrames(1);
 
-        expect(result.current.detectedNote).toBeNull();
-        expect(result.current.detectedFrequency).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
     });
 
     it("does not emit until STABLE_FRAMES consecutive frames of the same note are seen", async () => {
@@ -323,11 +316,11 @@ describe("usePitchDetection", () => {
 
         // Flush STABLE_FRAMES-1 frames — not yet stable
         tickFrames(STABLE_FRAMES - 1);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
 
         // One more frame — now stable
         tickFrames(1);
-        expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedPitch?.note).toBe("La");
     });
 
     it("does not re-emit the same note while it is held down (EMITTED state guard)", async () => {
@@ -349,13 +342,13 @@ describe("usePitchDetection", () => {
 
         // Flush enough frames to emit once
         tickFrames(STABLE_FRAMES);
-        expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedPitch?.note).toBe("La");
 
         // Flush many more frames while in EMITTED state — note must remain stable
         tickFrames(10);
 
         // Still "La", no re-trigger
-        expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedPitch?.note).toBe("La");
     });
 
     it("emits the same note again after consumeNote + silence gap", async () => {
@@ -386,20 +379,20 @@ describe("usePitchDetection", () => {
 
         // STABLE_FRAMES frames → La emitted
         tickFrames(STABLE_FRAMES);
-        expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedPitch?.note).toBe("La");
 
         // Parent acknowledges the note → WAITING_FOR_SILENCE
         act(() => {
             result.current.consumeNote();
         });
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
 
         // SILENCE_FRAMES_TO_REARM silence frames → re-arms (back to IDLE)
         tickFrames(SILENCE_FRAMES_TO_REARM);
 
         // STABLE_FRAMES more La frames → La emitted again
         tickFrames(STABLE_FRAMES);
-        expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedPitch?.note).toBe("La");
     });
 
     it("resets candidate counter when note changes mid-stability", async () => {
@@ -427,15 +420,15 @@ describe("usePitchDetection", () => {
 
         // STABLE_FRAMES-1 La frames — not yet stable
         tickFrames(STABLE_FRAMES - 1);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
 
         // STABLE_FRAMES-1 Sol frames — counter reset on switch, still not stable
         tickFrames(STABLE_FRAMES - 1);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
 
         // 1 more Sol frame — now STABLE_FRAMES consecutive, Sol emitted
         tickFrames(1);
-        expect(result.current.detectedNote).toBe("Sol");
+        expect(result.current.detectedPitch?.note).toBe("Sol");
     });
 
     it("reflects permission from useMicrophone", () => {
@@ -458,7 +451,7 @@ describe("usePitchDetection", () => {
         }).not.toThrow();
 
         expect(result.current.isListening).toBe(true);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
     });
 
     it("handles a frame where frequencyToNoteWithMidi returns null (line 145 branch)", async () => {
@@ -481,7 +474,7 @@ describe("usePitchDetection", () => {
         rerender();
 
         tickFrames(1);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
     });
 
     it("correctOctaveError: shifts candidateMidi DOWN when it is one octave above the history median", async () => {
@@ -510,11 +503,11 @@ describe("usePitchDetection", () => {
 
         // 3 La4 frames — seeds history at MIDI 69, not yet stable
         tickFrames(3);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
 
         // STABLE_FRAMES La5 (880 Hz) frames — corrected DOWN to MIDI 69
         tickFrames(STABLE_FRAMES);
-        expect(result.current.detectedMidi).toBe(69);
+        expect(result.current.detectedPitch?.midi).toBe(69);
     });
 
     it("correctOctaveError: shifts candidateMidi UP when it is one octave below the history median", async () => {
@@ -543,11 +536,11 @@ describe("usePitchDetection", () => {
 
         // 3 La5 frames — seeds history at MIDI 81, not yet stable
         tickFrames(3);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
 
         // STABLE_FRAMES La4 (440 Hz) frames — corrected UP to MIDI 81
         tickFrames(STABLE_FRAMES);
-        expect(result.current.detectedMidi).toBe(81);
+        expect(result.current.detectedPitch?.midi).toBe(81);
     });
 
     it("WAITING_FOR_SILENCE: resets silence counter when signal is still ringing after consumeNote", async () => {
@@ -578,7 +571,7 @@ describe("usePitchDetection", () => {
         rerender();
 
         tickFrames(STABLE_FRAMES);
-        expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedPitch?.note).toBe("La");
 
         act(() => { result.current.consumeNote(); });
 
@@ -586,13 +579,13 @@ describe("usePitchDetection", () => {
         tickFrames(3);
         // STABLE_FRAMES-1 more — still not re-armed (no note emitted)
         tickFrames(STABLE_FRAMES - 1);
-        expect(result.current.detectedNote).toBeNull();
+        expect(result.current.detectedPitch).toBeNull();
 
         // SILENCE_FRAMES_TO_REARM silence frames → re-arms
         tickFrames(SILENCE_FRAMES_TO_REARM);
 
         // La emitted again
         tickFrames(STABLE_FRAMES);
-        expect(result.current.detectedNote).toBe("La");
+        expect(result.current.detectedPitch?.note).toBe("La");
     });
 });

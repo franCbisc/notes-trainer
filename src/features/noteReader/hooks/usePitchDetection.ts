@@ -60,10 +60,12 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         useMicrophone();
 
     const [isListening, setIsListening] = useState(false);
-    const [detectedNote, setDetectedNote] = useState<string | null>(null);
-    const [detectedMidi, setDetectedMidi] = useState<number | null>(null);
-    const [detectedFrequency, setDetectedFrequency] = useState<number | null>(null);
-    const [clarity, setClarity] = useState<number | null>(null);
+    const [detectedPitch, setDetectedPitch] = useState<{
+        note: string;
+        midi: number;
+        frequency: number;
+        clarity: number;
+    } | null>(null);
 
     const analyserRef = useRef<AnalyserNode | null>(null);
     const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -96,10 +98,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         midiHistoryRef.current = [];
 
         setIsListening(false);
-        setDetectedNote(null);
-        setDetectedMidi(null);
-        setDetectedFrequency(null);
-        setClarity(null);
+        setDetectedPitch(null);
     }, []);
 
     // ── consumeNote — parent calls this after handling the emitted note ────────
@@ -109,11 +108,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         silenceFramesRef.current = 0;
         candidateNoteRef.current = null;
         candidateFramesRef.current = 0;
-        // Clear state so parent useEffect does not re-trigger
-        setDetectedNote(null);
-        setDetectedMidi(null);
-        setDetectedFrequency(null);
-        setClarity(null);
+        setDetectedPitch(null);
     }, []);
 
     // ── Detection loop ────────────────────────────────────────────────────────
@@ -174,10 +169,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
                                 `[pitch] ${freq.toFixed(1)} Hz → ${note} ` +
                                 `MIDI ${correctedMidi} (clarity ${(cl * 100).toFixed(1)}%)`,
                             );
-                            setDetectedFrequency(freq);
-                            setClarity(cl);
-                            setDetectedMidi(correctedMidi);
-                            setDetectedNote(note);
+                            setDetectedPitch({ note, midi: correctedMidi, frequency: freq, clarity: cl });
                         }
                         break;
                     }
@@ -251,10 +243,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
     }, [teardown, releaseMic]);
 
     return {
-        detectedNote,
-        detectedMidi,
-        detectedFrequency,
-        clarity,
+        detectedPitch,
         isListening,
         permission,
         startListening,
