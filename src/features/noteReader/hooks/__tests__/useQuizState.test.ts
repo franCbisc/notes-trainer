@@ -418,6 +418,17 @@ describe("useQuizState", () => {
 
             expect(isCorrect).toBe(false);
         });
+
+        it("falls back to note name when midiToNoteNameWithOctave returns null", () => {
+            const onNoteChange = jest.fn();
+            const { result } = renderHook(() => useQuizState(onNoteChange));
+
+            act(() => { result.current.advance({ step: 0, name: "La", clef: "treble", midi: 69 }); });
+
+            act(() => { result.current.handleAnswer("La", -1); });
+
+            expect(result.current.selected).toBe("La");
+        });
     });
 });
 

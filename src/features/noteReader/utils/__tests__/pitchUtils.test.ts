@@ -1,4 +1,4 @@
-import { frequencyToMidi, midiToNoteName, frequencyToNoteName, frequencyToNoteWithMidi, isPianoFrequency, PIANO_FREQ_MIN, PIANO_FREQ_MAX } from "../pitchUtils";
+import { frequencyToMidi, midiToNoteName, frequencyToNoteName, frequencyToNoteWithMidi, isPianoFrequency, PIANO_FREQ_MIN, PIANO_FREQ_MAX, midiToNoteNameWithOctave } from "../pitchUtils";
 
 describe("frequencyToMidi", () => {
     it("returns -1 for zero frequency", () => {
@@ -168,6 +168,40 @@ describe("frequencyToNoteWithMidi", () => {
 
     it("maps C5 (~523.25 Hz) to { name: 'Do', midi: 72 }", () => {
         expect(frequencyToNoteWithMidi(523.25)).toEqual({ name: "Do", midi: 72 });
+    });
+});
+
+describe("midiToNoteNameWithOctave", () => {
+    it("returns null for MIDI < 0", () => {
+        expect(midiToNoteNameWithOctave(-1)).toBeNull();
+    });
+
+    it("returns null for MIDI > 127", () => {
+        expect(midiToNoteNameWithOctave(128)).toBeNull();
+    });
+
+    it("maps MIDI 60 (C4) to 'Do4'", () => {
+        expect(midiToNoteNameWithOctave(60)).toBe("Do4");
+    });
+
+    it("maps MIDI 69 (A4) to 'La4'", () => {
+        expect(midiToNoteNameWithOctave(69)).toBe("La4");
+    });
+
+    it("maps MIDI 72 (C5) to 'Do5'", () => {
+        expect(midiToNoteNameWithOctave(72)).toBe("Do5");
+    });
+
+    it("maps MIDI 0 (C-1) to 'Do-1'", () => {
+        expect(midiToNoteNameWithOctave(0)).toBe("Do-1");
+    });
+
+    it("maps MIDI 127 (G9) to 'Sol9'", () => {
+        expect(midiToNoteNameWithOctave(127)).toBe("Sol9");
+    });
+
+    it("maps MIDI 61 (C#4) to 'Do#4'", () => {
+        expect(midiToNoteNameWithOctave(61)).toBe("Do#4");
     });
 });
 

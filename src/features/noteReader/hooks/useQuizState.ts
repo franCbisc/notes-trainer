@@ -4,6 +4,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import { Note, AnswerStatus } from "../types";
+import { midiToNoteNameWithOctave } from "../utils/pitchUtils";
 
 /** Duration (ms) of the wrong-answer flash before the quiz resumes listening. */
 const WRONG_FLASH_MS = 1000;
@@ -91,7 +92,10 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
             const nameMatches = isSamePitch(name, current.name);
             const octaveMatches = playedMidi === undefined || isCorrectOctave(playedMidi, current.midi);
             const isCorrect = nameMatches && octaveMatches;
-            setSelected(name);
+            const playedNoteDisplay = playedMidi !== undefined
+                ? (midiToNoteNameWithOctave(playedMidi) ?? name)
+                : name;
+            setSelected(playedNoteDisplay);
 
             if (isCorrect) {
                 setAnswered("correct");

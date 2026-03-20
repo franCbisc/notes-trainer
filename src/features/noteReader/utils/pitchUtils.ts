@@ -102,3 +102,13 @@ export function frequencyToNoteWithMidi(frequencyHz: number): { name: string; mi
     return { name, midi };
 }
 
+/**
+ * Converts a MIDI number to an Italian note name with octave (e.g. "La4", "Do#3").
+ */
+export function midiToNoteNameWithOctave(midi: number): string | null {
+    const name = midiToNoteName(midi);
+    if (name === null) return null;
+    const octave = Math.floor(midi / 12) - 1;
+    return `${name}${octave}`;
+}
+
