@@ -110,6 +110,18 @@ export const NoteReaderPage: FC = () => {
                 <div className="headerSpacer" aria-hidden="true" />
             </header>
 
+            {mode === "automatic" && permission === "granted" && (
+                <div className="listeningIndicator">
+                    {isListening && <span className="listeningDot" />}
+                    <span>{isListening ? "Listening…" : "Ready"}</span>
+                    {detectedFrequency !== null && clarity !== null && (
+                        <span className="pitchDebug">
+                            {Math.round(detectedFrequency)} Hz · {Math.round(clarity * 100)}%
+                        </span>
+                    )}
+                </div>
+            )}
+
             <div className="staffCard">
                 <GrandStaff
                     current={current}
@@ -167,17 +179,6 @@ export const NoteReaderPage: FC = () => {
                 </div>
             )}
 
-            {mode === "automatic" && permission === "granted" && (
-                <div className="listeningIndicator">
-                    {isListening && <span className="listeningDot" />}
-                    <span>{isListening ? "Listening…" : "Ready"}</span>
-                    {detectedFrequency !== null && clarity !== null && (
-                        <span className="pitchDebug">
-                            {Math.round(detectedFrequency)} Hz · {Math.round(clarity * 100)}%
-                        </span>
-                    )}
-                </div>
-            )}
         </div>
     );
 };
