@@ -70,5 +70,14 @@ describe("GrandStaff", () => {
 
         expect(ellipse1.getAttribute("fill")).not.toBe(ellipse2.getAttribute("fill"));
     });
+
+    it("renders wrong color when answered incorrectly", () => {
+        const { container } = render(
+            <GrandStaff current={trebleNote} answered={true} correct={false} />
+        );
+
+        const ellipse = container.querySelector("ellipse")!;
+        expect(ellipse.getAttribute("fill")).not.toBe("rgb(128, 128, 128)");
+    });
 });
 

@@ -3,7 +3,7 @@
  */
 
 import React, { FC } from "react";
-import { BassClefProps } from "../types";
+import { BassClefProps } from "./types";
 import { STAFF_PADDING, COLORS } from "../constants";
 
 export const BassClef: FC<BassClefProps> = ({ cy }) => {

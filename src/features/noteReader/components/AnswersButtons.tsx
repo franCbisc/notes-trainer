@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { AnswersButtonsProps } from "../types";
+import { AnswersButtonsProps } from "./types";
 
 export const AnswersButtons: FC<AnswersButtonsProps> = ({
     noteNames,

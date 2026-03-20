@@ -3,7 +3,7 @@
  */
 
 import React, { FC } from "react";
-import { StaffLinesProps } from "../types";
+import { StaffLinesProps } from "./types";
 import { HALF_SPACING, STAFF_PADDING, SVG_WIDTH, COLORS } from "../constants";
 
 export const StaffLines: FC<StaffLinesProps> = ({ cy }) => {

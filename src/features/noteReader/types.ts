@@ -1,3 +1,8 @@
+/**
+ * Domain types for the NoteReader feature.
+ * Component-specific props are defined in their respective component files.
+ */
+
 import type { useMicrophone } from "./hooks/useMicrophone";
 
 export interface Note {
@@ -8,47 +13,9 @@ export interface Note {
     midi: number;
 }
 
-export interface StaffLinesProps {
-    cy: number;
-}
-
-export interface NoteHeadProps {
-    step: number;
-    cy: number;
-    answered: boolean;
-    correct: boolean;
-}
-
-export interface BraceProps {
-    topY: number;
-    botY: number;
-}
-
-export interface TrebleClefProps {
-    cy: number;
-}
-
-export interface BassClefProps {
-    cy: number;
-}
-
-export interface GrandStaffProps {
-    current: Note;
-    answered: boolean;
-    correct: boolean;
-    keyAccidentals?: KeyAccidental[];
-}
-
 export type AnswerStatus = "correct" | "wrong" | null;
 
 export type ClefFilter = "both" | "treble" | "bass";
-
-export interface AnswersButtonsProps {
-    noteNames: readonly string[];
-    selected: string | null;
-    answered: AnswerStatus;
-    onAnswer: (name: string) => void;
-}
 
 export interface DetectedPitch {
     note: string;

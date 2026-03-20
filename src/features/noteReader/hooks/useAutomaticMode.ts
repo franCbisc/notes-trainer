@@ -6,12 +6,11 @@
 import { useEffect } from "react";
 import type { DetectedPitch } from "../types";
 import type { QuizMode } from "./useQuizSettings";
-
-type PermissionStatus = "idle" | "requesting" | "granted" | "denied" | "unsupported";
+import type { MicPermission } from "./useMicrophone";
 
 interface UseAutomaticModeProps {
     mode: QuizMode;
-    permission: PermissionStatus;
+    permission: MicPermission;
     detectedPitch: DetectedPitch | null;
     answered: "correct" | "wrong" | null;
     onAnswer: (name: string, midi: number) => boolean;

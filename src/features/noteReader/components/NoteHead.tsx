@@ -3,7 +3,7 @@
  */
 
 import React, { FC, useMemo } from "react";
-import { NoteHeadProps } from "../types";
+import { NoteHeadProps } from "./types";
 import {
     HALF_SPACING,
     NOTE_X,
@@ -12,7 +12,9 @@ import {
     COLORS,
 } from "../constants";
 
-export const NoteHead: FC<NoteHeadProps> = ({ step, cy, answered, correct }) => {
+export const NoteHead: FC<NoteHeadProps> = ({ step, cy, answerStatus }) => {
+    const answered = answerStatus !== null;
+    const correct = answerStatus === "correct";
     const y = cy - step * HALF_SPACING;
 
     const fill = useMemo(() => {

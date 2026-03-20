@@ -9,7 +9,7 @@ describe("NoteHead", () => {
     it("renders an ellipse and a stem line", () => {
         const { container } = render(
             <svg>
-                <NoteHead step={0} cy={CY} answered={false} correct={false} />
+                <NoteHead step={0} cy={CY} answerStatus={null} />
             </svg>
         );
 
@@ -20,7 +20,7 @@ describe("NoteHead", () => {
     it("uses default color when not answered", () => {
         const { container } = render(
             <svg>
-                <NoteHead step={0} cy={CY} answered={false} correct={false} />
+                <NoteHead step={0} cy={CY} answerStatus={null} />
             </svg>
         );
 
@@ -31,7 +31,7 @@ describe("NoteHead", () => {
     it("uses correct color when answered correctly", () => {
         const { container } = render(
             <svg>
-                <NoteHead step={0} cy={CY} answered={true} correct={true} />
+                <NoteHead step={0} cy={CY} answerStatus="correct" />
             </svg>
         );
 
@@ -42,7 +42,7 @@ describe("NoteHead", () => {
     it("uses wrong color when answered incorrectly", () => {
         const { container } = render(
             <svg>
-                <NoteHead step={0} cy={CY} answered={true} correct={false} />
+                <NoteHead step={0} cy={CY} answerStatus="wrong" />
             </svg>
         );
 
@@ -53,11 +53,10 @@ describe("NoteHead", () => {
     it("renders ledger lines for notes above the staff (step > 4)", () => {
         const { container } = render(
             <svg>
-                <NoteHead step={6} cy={CY} answered={false} correct={false} />
+                <NoteHead step={6} cy={CY} answerStatus={null} />
             </svg>
         );
 
-        // 1 stem line + 1 ledger line for step 6
         const lines = container.querySelectorAll("line");
         expect(lines.length).toBeGreaterThanOrEqual(2);
     });
@@ -65,11 +64,10 @@ describe("NoteHead", () => {
     it("renders ledger lines for notes below the staff (step < -4)", () => {
         const { container } = render(
             <svg>
-                <NoteHead step={-6} cy={CY} answered={false} correct={false} />
+                <NoteHead step={-6} cy={CY} answerStatus={null} />
             </svg>
         );
 
-        // 1 stem line + 1 ledger line for step -6
         const lines = container.querySelectorAll("line");
         expect(lines.length).toBeGreaterThanOrEqual(2);
     });
@@ -77,11 +75,10 @@ describe("NoteHead", () => {
     it("does not render ledger lines for notes within the staff", () => {
         const { container } = render(
             <svg>
-                <NoteHead step={0} cy={CY} answered={false} correct={false} />
+                <NoteHead step={0} cy={CY} answerStatus={null} />
             </svg>
         );
 
-        // Only the stem line, no ledger lines
         expect(container.querySelectorAll("line").length).toBe(1);
     });
 
@@ -89,7 +86,7 @@ describe("NoteHead", () => {
         const step = 2;
         const { container } = render(
             <svg>
-                <NoteHead step={step} cy={CY} answered={false} correct={false} />
+                <NoteHead step={step} cy={CY} answerStatus={null} />
             </svg>
         );
 
@@ -98,4 +95,3 @@ describe("NoteHead", () => {
         expect(Number(ellipse.getAttribute("cy"))).toBe(expectedCy);
     });
 });
-

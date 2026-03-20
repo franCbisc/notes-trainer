@@ -6,3 +6,4 @@ export { BassClef } from "./BassClef";
 export { AnswersButtons } from "./AnswersButtons";
 export { KeySignatureAccidentals } from "./KeySignatureAccidentals";
 export { SettingsPanel } from "./SettingsPanel";
+export { SettingsIcon } from "./SettingsIcon";

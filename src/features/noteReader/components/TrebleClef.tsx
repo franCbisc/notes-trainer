@@ -3,7 +3,7 @@
  */
 
 import React, { FC } from "react";
-import { TrebleClefProps } from "../types";
+import { TrebleClefProps } from "./types";
 import { STAFF_PADDING, COLORS } from "../constants";
 
 export const TrebleClef: FC<TrebleClefProps> = ({ cy }) => {
