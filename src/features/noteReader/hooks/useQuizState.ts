@@ -1,5 +1,5 @@
 /**
- * Hook for managing quiz state (current note, answers, score)
+ * Hook for managing quiz state (current note, answers, selected)
  */
 
 import { useState, useCallback, useRef } from "react";
@@ -50,28 +50,12 @@ function isCorrectOctave(playedMidi: number, targetMidi: number): boolean {
     return Math.abs(playedMidi - targetMidi) <= OCTAVE_TOLERANCE_SEMITONES;
 }
 
-interface QuizScore {
-    correct: number;
-    total: number;
-}
-
 export function useQuizState(onNoteChange: (note: Note) => void) {
     const [current, setCurrent] = useState<Note | null>(null);
     const [answered, setAnswered] = useState<AnswerStatus>(null);
     const [selected, setSelected] = useState<string | null>(null);
-    const [score, setScore] = useState<QuizScore>({ correct: 0, total: 0 });
 
-    /** Timer ref used to clear a pending wrong-flash reset. */
     const wrongFlashTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-    const resetQuiz = useCallback(() => {
-        if (wrongFlashTimerRef.current !== null) {
-            clearTimeout(wrongFlashTimerRef.current);
-            wrongFlashTimerRef.current = null;
-        }
-        setScore({ correct: 0, total: 0 });
-        onNoteChange({ step: -6, name: "Do", clef: "treble", midi: 60 });
-    }, [onNoteChange]);
 
     const advance = useCallback((note: Note) => {
         if (wrongFlashTimerRef.current !== null) {
@@ -99,13 +83,7 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
 
             if (isCorrect) {
                 setAnswered("correct");
-                setScore((s) => ({
-                    correct: s.correct + 1,
-                    total: s.total + 1,
-                }));
             } else {
-                // Manual mode: flash red then reset so the user can guess again.
-                // Automatic mode: same flash behaviour.
                 setAnswered("wrong");
                 wrongFlashTimerRef.current = setTimeout(() => {
                     wrongFlashTimerRef.current = null;
@@ -119,21 +97,11 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
         [answered, current]
     );
 
-    const percentage = score.total > 0 ? Math.round((score.correct / score.total) * 100) : null;
-
     return {
         current,
-        setCurrent,
         answered,
-        setAnswered,
         selected,
-        setSelected,
-        score,
-        setScore,
         advance,
         handleAnswer,
-        resetQuiz,
-        percentage,
     };
 }
-
