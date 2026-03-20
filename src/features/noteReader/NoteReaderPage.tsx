@@ -2,7 +2,7 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import { GrandStaff, AnswersButtons, SettingsPanel } from "./components";
 import { useNoteGeneration, useQuizState, usePitchDetection } from "./hooks";
 import { NOTE_NAMES, KEY_SIGNATURES } from "./constants";
@@ -16,8 +16,10 @@ export const NoteReaderPage: FC = () => {
     const [settingsOpen, setSettingsOpen] = useState(false);
     const settingsBtnRef = useRef<HTMLButtonElement>(null);
 
-    // Key accidentals only apply in automatic mode
-    const keyAccidentals = mode === "automatic" ? (KEY_SIGNATURES[selectedKey] ?? []) : [];
+    const keyAccidentals = useMemo(
+        () => (mode === "automatic" ? (KEY_SIGNATURES[selectedKey] ?? []) : []),
+        [mode, selectedKey],
+    );
 
     const { generateRandomNote } = useNoteGeneration(clefFilter, keyAccidentals);
     const { current, answered, selected, advance, handleAnswer } =
