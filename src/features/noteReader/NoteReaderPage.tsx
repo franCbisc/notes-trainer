@@ -2,19 +2,30 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo } from "react";
 import { GrandStaff, AnswersButtons, SettingsPanel } from "./components";
-import { useNoteGeneration, useQuizState, usePitchDetection } from "./hooks";
+import {
+    useNoteGeneration,
+    useQuizState,
+    usePitchDetection,
+    useQuizSettings,
+    useAutomaticMode,
+} from "./hooks";
 import { NOTE_NAMES, KEY_SIGNATURES } from "./constants";
-import { ClefFilter } from "./types";
 import "../../style.css";
 
 export const NoteReaderPage: FC = () => {
-    const [clefFilter, setClefFilter] = useState<ClefFilter>("both");
-    const [selectedKey, setSelectedKey] = useState<string>("Do");
-    const [mode, setMode] = useState<"manual" | "automatic">("manual");
-    const [settingsOpen, setSettingsOpen] = useState(false);
-    const settingsBtnRef = useRef<HTMLButtonElement>(null);
+    const {
+        clefFilter,
+        setClefFilter,
+        selectedKey,
+        setSelectedKey,
+        mode,
+        setMode,
+        settingsOpen,
+        setSettingsOpen,
+        settingsBtnRef,
+    } = useQuizSettings();
 
     const keyAccidentals = useMemo(
         () => (mode === "automatic" ? (KEY_SIGNATURES[selectedKey] ?? []) : []),
@@ -27,43 +38,40 @@ export const NoteReaderPage: FC = () => {
     const { detectedPitch, isListening, permission, startListening, stopListening, consumeNote } =
         usePitchDetection();
 
-    // Initialize first note
+    const {
+        isListening: isListeningActive,
+        detectedPitch: activePitch,
+        showMicPrompt,
+        micDenied,
+    } = useAutomaticMode({
+        mode,
+        permission,
+        detectedPitch,
+        answered,
+        onAnswer: handleAnswer,
+        onConsumeNote: consumeNote,
+        onStartListening: startListening,
+        onStopListening: stopListening,
+    });
+
     useEffect(() => {
         if (!current) {
             advance(generateRandomNote());
         }
     }, [current, advance, generateRandomNote]);
 
-    // When the clef filter changes, immediately pick a fresh note from the new pool
     useEffect(() => {
         advance(generateRandomNote());
     }, [clefFilter]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // When the key changes, pick a fresh note so the displayed note reflects the new key
     useEffect(() => {
         advance(generateRandomNote());
     }, [selectedKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Handle mode changes
     useEffect(() => {
-        if (mode === "automatic") {
-            startListening();
-        } else {
-            stopListening();
-        }
-        // Re-generate so the note name reflects the new mode's key context
         advance(generateRandomNote());
     }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Automatic mode: feed each detected note into the quiz.
-    useEffect(() => {
-        if (mode === "automatic" && detectedPitch && !answered) {
-            handleAnswer(detectedPitch.note, detectedPitch.midi);
-            consumeNote();
-        }
-    }, [mode, detectedPitch, answered, handleAnswer, consumeNote]);
-
-    // Advance to the next note after a correct answer.
     useEffect(() => {
         if (answered !== "correct") return;
 
@@ -76,9 +84,6 @@ export const NoteReaderPage: FC = () => {
     if (!current) {
         return <div className="root">Loading...</div>;
     }
-
-    const showMicPrompt = mode === "automatic" && permission !== "granted";
-    const micDenied = permission === "denied" || permission === "unsupported";
 
     return (
         <div className="root">
@@ -114,11 +119,11 @@ export const NoteReaderPage: FC = () => {
 
             {mode === "automatic" && permission === "granted" && (
                 <div className="listeningIndicator">
-                    {isListening && <span className="listeningDot" />}
-                    <span>{isListening ? "Listening…" : "Ready"}</span>
-                    {detectedPitch && (
+                    {isListeningActive && <span className="listeningDot" />}
+                    <span>{isListeningActive ? "Listening…" : "Ready"}</span>
+                    {activePitch && (
                         <span className="pitchDebug">
-                            {Math.round(detectedPitch.frequency)} Hz · {Math.round(detectedPitch.clarity * 100)}%
+                            {Math.round(activePitch.frequency)} Hz · {Math.round(activePitch.clarity * 100)}%
                         </span>
                     )}
                 </div>
@@ -133,7 +138,6 @@ export const NoteReaderPage: FC = () => {
                 />
             </div>
 
-            {/* Feedback — automatic only: show what was played */}
             <div className="feedback" style={{ opacity: answered ? 1 : 0, pointerEvents: "none" }}>
                 {answered === "wrong" && mode === "automatic" && (
                     <span className="wrong">✗ You played <strong>{selected}</strong></span>
@@ -180,7 +184,6 @@ export const NoteReaderPage: FC = () => {
                     )}
                 </div>
             )}
-
         </div>
     );
 };
