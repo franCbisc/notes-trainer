@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2e564268-61cc-4c2a-b5a0-0e294d633c51" name="Changes" comment="refactor: types">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.ask2agent.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.app.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.app.json" afterDir="false" />
+    <list default="true" id="2e564268-61cc-4c2a-b5a0-0e294d633c51" name="Changes" comment="extracted MicProp component">
+      <change afterPath="$PROJECT_DIR$/src/features/noteReader/components/MicPrompt.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/MicPrompt.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/NoteReaderPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/NoteReaderPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/BassClef.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/BassClef.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/GrandStaff.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/GrandStaff.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/TrebleClef.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/TrebleClef.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/BassClef.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/BassClef.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/TrebleClef.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/TrebleClef.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,33 +49,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "SHELLCHECK.PATH": "I do mind",
-    "git-widget-placeholder": "main",
-    "javascript.preferred.runtime.type.id": "node",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/francesca.bisceglia/Documents/personal/dev/notes-trainer",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.standard": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.standard": "",
-    "nodejs_package_manager_path": "npm",
-    "npm.test.executor": "Run",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "settings.typescriptcompiler",
-    "ts.external.directory.path": "/Users/francesca.bisceglia/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHELLCHECK.PATH&quot;: &quot;I do mind&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/francesca.bisceglia/Documents/personal/dev/notes-trainer&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.test.executor&quot;: &quot;Run&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.typescriptcompiler&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/francesca.bisceglia/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -349,7 +357,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added individual components tests" />
     <MESSAGE value="add 100% test coverage and set the maximum threshold for coverage" />
     <MESSAGE value=".gitignore update" />
     <MESSAGE value="skills edits" />
@@ -374,7 +381,8 @@
     <MESSAGE value="refactored God component NoteReaderPage" />
     <MESSAGE value="removed unused state props from useQuizState" />
     <MESSAGE value="refactor: types" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: types" />
+    <MESSAGE value="extracted MicProp component" />
+    <option name="LAST_COMMIT_MESSAGE" value="extracted MicProp component" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

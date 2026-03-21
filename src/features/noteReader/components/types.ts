@@ -18,10 +18,6 @@ export interface TrebleClefProps {
     cy: number;
 }
 
-export interface BassClefProps {
-    cy: number;
-}
-
 export interface GrandStaffProps {
     current: Note;
     answered: boolean;

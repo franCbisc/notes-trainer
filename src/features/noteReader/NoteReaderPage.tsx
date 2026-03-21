@@ -3,7 +3,7 @@
  */
 
 import React, { FC, useEffect, useMemo } from "react";
-import { GrandStaff, AnswersButtons, SettingsPanel, SettingsIcon } from "./components";
+import { GrandStaff, AnswersButtons, SettingsPanel, SettingsIcon, MicPrompt } from "./components";
 import {
     useNoteGeneration,
     useQuizState,
@@ -42,7 +42,6 @@ export const NoteReaderPage: FC = () => {
         isListening: isListeningActive,
         detectedPitch: activePitch,
         showMicPrompt,
-        micDenied,
     } = useAutomaticMode({
         mode,
         permission,
@@ -150,35 +149,11 @@ export const NoteReaderPage: FC = () => {
             )}
 
             {showMicPrompt && (
-                <div className="micPrompt">
-                    {micDenied ? (
-                        <div className="micDenied">
-                            <span className="micIcon">🎙️</span>
-                            <p className="micPromptText">
-                                {permission === "unsupported"
-                                    ? "Your browser does not support microphone access."
-                                    : "Microphone access was denied. Please allow it in your browser settings and try again."}
-                            </p>
-                            <button className="micBtn micBtnSecondary" onClick={() => setMode("manual")}>
-                                Switch to manual mode
-                            </button>
-                        </div>
-                    ) : (
-                        <div className="micRequest">
-                            <span className="micIcon">🎙️</span>
-                            <p className="micPromptText">
-                                Allow microphone access so the app can listen to your piano.
-                            </p>
-                            <button
-                                className="micBtn"
-                                onClick={startListening}
-                                disabled={permission === "requesting"}
-                            >
-                                {permission === "requesting" ? "Requesting…" : "Enable microphone"}
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <MicPrompt
+                    permission={permission}
+                    onStartListening={startListening}
+                    onSwitchToManual={() => setMode("manual")}
+                />
             )}
         </div>
     );

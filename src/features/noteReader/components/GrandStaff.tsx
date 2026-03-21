@@ -31,7 +31,7 @@ export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct, ke
 
             {/* Clef symbols */}
             <TrebleClef cy={TREBLE_CY} />
-            <BassClef cy={BASS_CY} />
+            <BassClef />
 
             {/* Key signature accidentals */}
             <KeySignatureAccidentals accidentals={keyAccidentals} />

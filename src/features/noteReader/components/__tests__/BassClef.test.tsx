@@ -18,17 +18,6 @@ describe("BassClef", () => {
         expect(text?.textContent).toBe("𝄢");
     });
 
-    it("positions the text vertically at cy", () => {
-        const { container } = render(
-            <svg>
-                <BassClef cy={CY} />
-            </svg>
-        );
-
-        const text = container.querySelector("text");
-        expect(Number(text?.getAttribute("y"))).toBe(CY);
-    });
-
     it("uses the correct x position", () => {
         const { container } = render(
             <svg>
@@ -37,7 +26,7 @@ describe("BassClef", () => {
         );
 
         const text = container.querySelector("text");
-        expect(Number(text?.getAttribute("x"))).toBe(STAFF_PADDING + 15);
+        expect(Number(text?.getAttribute("x"))).toBe(STAFF_PADDING + 20);
     });
 
     it("uses the correct fill color", () => {

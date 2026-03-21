@@ -3,18 +3,16 @@
  */
 
 import React, { FC } from "react";
-import { BassClefProps } from "./types";
 import { STAFF_PADDING, COLORS } from "../constants";
 
-export const BassClef: FC<BassClefProps> = ({ cy }) => {
-    const textY = cy;
+export const BassClef: FC = () => {
     const bassClefChar = "𝄢";
 
     return (
         <text
-            x={STAFF_PADDING + 15}
-            y={textY}
-            fontSize="35"
+            x={STAFF_PADDING + 20}
+            y={243}
+            fontSize="55"
             fontFamily="'Noto Music', serif"
             fill={COLORS.text.dark}
             textAnchor="middle"

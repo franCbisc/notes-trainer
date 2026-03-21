@@ -19,9 +19,9 @@
 
   /* feedback */
   --correct:      #1e8a45;
-  --correct-bg:   #1e8a4530;
+  --correct-bg:   #1e8a4570;
   --wrong:        #cc2222;
-  --wrong-bg:     #cc222230;
+  --wrong-bg:     #cc222270;
 
   font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 16px;

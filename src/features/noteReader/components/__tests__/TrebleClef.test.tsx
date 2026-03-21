@@ -37,7 +37,7 @@ describe("TrebleClef", () => {
         );
 
         const text = container.querySelector("text");
-        expect(Number(text?.getAttribute("x"))).toBe(STAFF_PADDING + 15);
+        expect(Number(text?.getAttribute("x"))).toBe(STAFF_PADDING + 20);
     });
 
     it("uses the correct fill color", () => {
