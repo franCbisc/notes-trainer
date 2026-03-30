@@ -4,19 +4,9 @@
  */
 
 import React, { FC, useEffect, useRef } from "react";
-import { ClefFilter } from "../types";
 import { KEY_SIGNATURE_NAMES } from "../constants";
-
-interface SettingsPanelProps {
-    open: boolean;
-    onClose: () => void;
-    mode: "manual" | "automatic";
-    onModeChange: (mode: "manual" | "automatic") => void;
-    clefFilter: ClefFilter;
-    onClefChange: (clef: ClefFilter) => void;
-    selectedKey: string;
-    onKeyChange: (key: string) => void;
-}
+import type { SettingsPanelProps } from "./types";
+import { ClefFilter } from "../types";
 
 const CLEF_OPTIONS: { value: ClefFilter; label: string }[] = [
     { value: "both",   label: "Both" },

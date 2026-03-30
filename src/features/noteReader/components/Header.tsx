@@ -1,19 +1,8 @@
 import React, { FC, useRef, useEffect } from "react";
-import { ClefFilter } from "../types";
 import { KEY_SIGNATURE_NAMES } from "../constants";
 import { SettingsIcon } from "./SettingsIcon";
-
-interface HeaderProps {
-    settingsOpen: boolean;
-    onSettingsToggle: () => void;
-    onSettingsClose: () => void;
-    mode: "manual" | "automatic";
-    onModeChange: (mode: "manual" | "automatic") => void;
-    clefFilter: ClefFilter;
-    onClefChange: (clef: ClefFilter) => void;
-    selectedKey: string;
-    onKeyChange: (key: string) => void;
-}
+import type { HeaderProps } from "./types";
+import { ClefFilter } from "../types";
 
 const CLEF_OPTIONS: { value: ClefFilter; label: string }[] = [
     { value: "both",   label: "Both" },

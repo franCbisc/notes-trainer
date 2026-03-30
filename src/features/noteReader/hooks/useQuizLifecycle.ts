@@ -4,16 +4,7 @@
 
 import { useEffect } from "react";
 import type { Note } from "../types";
-
-interface UseQuizLifecycleProps {
-    current: Note | null;
-    answered: "correct" | "wrong" | null;
-    advance: (note: Note) => void;
-    generateRandomNote: (previousNote?: Note) => Note;
-    clefFilter: string;
-    selectedKey: string;
-    mode: string;
-}
+import type { UseQuizLifecycleProps } from "./types";
 
 export function useQuizLifecycle({
     current,

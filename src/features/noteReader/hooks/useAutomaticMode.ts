@@ -5,26 +5,8 @@
 
 import { useEffect } from "react";
 import type { DetectedPitch } from "../types";
-import type { QuizMode } from "./useQuizSettings";
+import type { UseAutomaticModeProps, UseAutomaticModeReturn } from "./types";
 import type { MicPermission } from "./useMicrophone";
-
-interface UseAutomaticModeProps {
-    mode: QuizMode;
-    permission: MicPermission;
-    detectedPitch: DetectedPitch | null;
-    answered: "correct" | "wrong" | null;
-    onAnswer: (name: string, midi: number) => boolean;
-    onConsumeNote: () => void;
-    onStartListening: () => Promise<void>;
-    onStopListening: () => void;
-}
-
-interface UseAutomaticModeReturn {
-    isListening: boolean;
-    detectedPitch: DetectedPitch | null;
-    showMicPrompt: boolean;
-    micDenied: boolean;
-}
 
 export function useAutomaticMode({
     mode,

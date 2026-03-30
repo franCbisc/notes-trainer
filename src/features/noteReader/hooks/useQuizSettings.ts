@@ -4,22 +4,9 @@
 
 import { useState, useCallback } from "react";
 import type { ClefFilter } from "../types";
+import type { QuizMode, QuizSettingsReturn } from "./types";
 
-export type QuizMode = "manual" | "automatic";
-
-interface QuizSettingsReturn {
-    clefFilter: ClefFilter;
-    setClefFilter: (filter: ClefFilter) => void;
-    selectedKey: string;
-    setSelectedKey: (key: string) => void;
-    mode: QuizMode;
-    setMode: (mode: QuizMode) => void;
-    settingsOpen: boolean;
-    setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    toggleSettings: () => void;
-    closeSettings: () => void;
-    handleModeChange: (mode: QuizMode) => void;
-}
+export type { QuizMode } from "./types";
 
 export function useQuizSettings(): QuizSettingsReturn {
     const [clefFilter, setClefFilter] = useState<ClefFilter>("both");
