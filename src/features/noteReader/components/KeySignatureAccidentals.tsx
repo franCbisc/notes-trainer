@@ -9,7 +9,7 @@ import { TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../constants";
 import type { KeySignatureAccidentalsProps } from "./types";
 
 /** Horizontal start position for the first accidental glyph */
-const KEY_SIG_X_START = 62;
+const KEY_SIG_X_START = 70;
 /** Horizontal spacing between accidental glyphs */
 const KEY_SIG_X_STEP = 12;
 

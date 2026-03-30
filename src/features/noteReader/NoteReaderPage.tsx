@@ -2,8 +2,8 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useMemo } from "react";
-import { GrandStaff, AnswersButtons, MicPrompt, Header } from "./components";
+import React, { FC, useMemo, useEffect } from "react";
+import { GrandStaff, AnswersButtons, MicPrompt, Header, CircleOfFifths } from "./components";
 import {
     useNoteGeneration,
     useQuizState,
@@ -23,11 +23,9 @@ export const NoteReaderPage: FC = () => {
         setSelectedKey,
         mode,
         setMode,
-        settingsOpen,
-        setSettingsOpen,
-        toggleSettings,
-        closeSettings,
         handleModeChange,
+        hasPlayedFirstNote,
+        markFirstNotePlayed,
     } = useQuizSettings();
 
     const keyAccidentals = useMemo(
@@ -66,6 +64,12 @@ export const NoteReaderPage: FC = () => {
         mode,
     });
 
+    useEffect(() => {
+        if (answered && !hasPlayedFirstNote) {
+            markFirstNotePlayed();
+        }
+    }, [answered, hasPlayedFirstNote, markFirstNotePlayed]);
+
     if (!current) {
         return <div className="root">Loading...</div>;
     }
@@ -73,18 +77,13 @@ export const NoteReaderPage: FC = () => {
     return (
         <div className="root">
             <Header
-                settingsOpen={settingsOpen}
-                onSettingsToggle={toggleSettings}
-                onSettingsClose={closeSettings}
                 mode={mode}
                 onModeChange={handleModeChange}
                 clefFilter={clefFilter}
                 onClefChange={setClefFilter}
-                selectedKey={selectedKey}
-                onKeyChange={setSelectedKey}
             />
 
-            {mode === "automatic" && permission === "granted" && (
+            {mode === "automatic" && permission === "granted" && !hasPlayedFirstNote && (
                 <div className="listeningIndicator">
                     {isListeningActive && <span className="listeningDot" />}
                     <span>{isListeningActive ? "Listening…" : "Ready"}</span>
@@ -104,6 +103,15 @@ export const NoteReaderPage: FC = () => {
                     keyAccidentals={keyAccidentals}
                 />
             </div>
+
+            {mode === "automatic" && (
+                <div className="circleOfFifthsContainer">
+                    <CircleOfFifths
+                        selectedKey={selectedKey}
+                        onKeySelect={setSelectedKey}
+                    />
+                </div>
+            )}
 
             <div className="feedback" style={{ opacity: answered ? 1 : 0, pointerEvents: "none" }}>
                 {answered === "wrong" && mode === "automatic" && (

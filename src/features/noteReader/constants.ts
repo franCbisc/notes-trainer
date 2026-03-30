@@ -111,6 +111,14 @@ export const KEY_SIGNATURES: Record<string, Array<{ baseName: string; accidental
         { baseName: "Re", accidental: "#", trebleStep: 2, bassStep: 0 },
         { baseName: "La", accidental: "#", trebleStep: -1, bassStep: 4 },
     ],
+    "Fa# - Re#m": [
+        { baseName: "Fa", accidental: "#", trebleStep: 4, bassStep: 2 },
+        { baseName: "Do", accidental: "#", trebleStep: 1, bassStep: -1 },
+        { baseName: "Sol", accidental: "#", trebleStep: 5, bassStep: 3 },
+        { baseName: "Re", accidental: "#", trebleStep: 2, bassStep: 0 },
+        { baseName: "La", accidental: "#", trebleStep: -1, bassStep: 4 },
+        { baseName: "Mi", accidental: "#", trebleStep: 3, bassStep: 1 },
+    ],
     // ── Flat keys ────────────────────────────────────────────────────────────
     "Fa - Rem": [
         { baseName: "Si", accidental: "b", trebleStep: 0, bassStep: -2 },

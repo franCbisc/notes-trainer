@@ -8,3 +8,4 @@ export { KeySignatureAccidentals } from "./KeySignatureAccidentals";
 export { SettingsIcon } from "./SettingsIcon";
 export { MicPrompt } from "./MicPrompt";
 export { Header } from "./Header";
+export { CircleOfFifths } from "./CircleOfFifths";

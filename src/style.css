@@ -53,70 +53,191 @@ body {
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   max-width: 480px;
   padding: 0 20px;
   margin-bottom: 30px;
 }
 
-.title {
+.headerLeft,
+.headerRight,
+.headerCenter {
+  display: flex;
+  align-items: center;
+}
+
+.headerCenter {
   flex: 1;
-  font-family: 'DM Mono', monospace;
-  font-size: 1.5rem;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin: 0;
-  text-align: center;
+  justify-content: center;
 }
 
-.headerSpacer {
-  width: 52px; /* matches .settingsBtn width */
-  flex-shrink: 0;
-}
-
-/* ─── Settings gear button ────────────────────────────────────────────────── */
-.settingsAnchor {
-  position: relative;
-  flex-shrink: 0;
-  width: 82px;
-}
-
-.settingsBtn {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  border: 2px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  font-size: 1.2rem;
-  line-height: 1;
-  cursor: pointer;
+.headerCircleWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.15s, color 0.15s, background 0.15s, box-shadow 0.15s;
-  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+.circleOfFifthsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerRight {
+  position: relative;
+}
+
+.settingsBtn {
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  transition: all 0.15s;
+  flex-shrink: 0;
   box-shadow: 0 2px 8px #b8892a14;
 }
 
 .settingsBtn:hover {
   border-color: var(--accent);
   color: var(--accent);
-  box-shadow: 0 4px 14px #b8892a28;
+  box-shadow: 0 4px 12px #b8892a24;
 }
 
 .settingsBtnActive {
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;
-  box-shadow: 0 4px 14px #b8892a40;
+  box-shadow: 0 4px 12px #b8892a30;
 }
 
-.settingsBtnActive:hover,
-.settingsBtnActive:active,
-.settingsBtnActive:focus {
+.settingsBtnActive .settingsBtnLabel {
+  color: #fff;
+}
+
+.settingsBtnActive .settingsBtnIcon {
+  color: #fff;
+}
+
+.settingsBtnIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settingsBtnLabel {
+  font-size: 0.75rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ─── Mode switch (toggle) ────────────────────────────────────────────────── */
+.modeSwitch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modeLabel {
+  font-size: 0.75rem;
+  font-family: 'DM Mono', monospace;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.15s;
+}
+
+.modeLabelActive {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.modeToggle {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  border-radius: 13px;
+  border: 2px solid var(--border);
+  background: var(--surface-alt);
+  cursor: pointer;
+  transition: all 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.modeToggle:hover {
+  border-color: var(--accent);
+}
+
+.modeToggleKnob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform 0.15s, background 0.15s;
+}
+
+.modeToggleKnobOn {
+  transform: translateX(20px);
+  background: var(--accent);
+}
+
+/* ─── Clef buttons ────────────────────────────────────────────────── */
+.clefButtons {
+  display: flex;
+  gap: 4px;
+  background: var(--surface-alt);
+  padding: 4px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+}
+
+.clefBtn {
+  height: 36px;
+  min-width: 36px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+}
+
+.clefBtnSymbol {
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.clefBtn:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+
+.clefBtnActive {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px #b8892a30;
+}
+
+.clefBtnActive:hover {
+  background: var(--accent);
   color: #fff;
 }
 
@@ -124,8 +245,9 @@ body {
 .settingsPanel {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
-  width: min(300px, calc(100vw - 40px));
+  right: 0;
+  left: auto;
+  width: min(260px, calc(100vw - 40px));
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -203,8 +325,8 @@ body {
 .settingsSelect {
   flex: 1;
   min-width: 0;
-  padding: 4px 8px;
-  border-radius: 7px;
+  padding: 6px 10px;
+  border-radius: 8px;
   border: 1px solid var(--border);
   background: var(--surface-alt);
   color: var(--text);
@@ -218,6 +340,124 @@ body {
   outline: none;
   border-color: var(--accent);
 }
+
+.settingsRowKey {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.settingsRowKey .settingsLabel {
+  align-self: flex-start;
+}
+
+
+
+.circleOfFifthsContainer {
+  display: flex;
+  justify-content: center;
+  padding: 0 16px 8px;
+  position: relative;
+  min-height: 110px;
+}
+
+.circleOfFifthsWrapper {
+  width: 100px;
+  height: 100px;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.circleOfFifthsWrapper.expanded {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%) scale(3.5);
+}
+
+.circleOfFifths {
+  width: 100%;
+  height: 100%;
+}
+
+.circleExpandHint {
+  font-size: 8px;
+  fill: var(--text-muted);
+  pointer-events: none;
+}
+
+.circleSlice {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 0.5;
+  cursor: pointer;
+  transition: fill 0.15s;
+}
+
+.circleSlice:hover {
+  fill: var(--surface-alt);
+}
+
+.circleSliceActive {
+  fill: var(--accent);
+}
+
+.circleSliceLabel {
+  font-size: 6px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 600;
+  fill: var(--text);
+  pointer-events: none;
+}
+
+.circleSliceRelative {
+  font-size: 3.5px;
+  font-weight: 400;
+  fill: var(--text-muted);
+}
+
+.circleSliceActive .circleSliceLabel {
+  fill: #fff;
+}
+
+.circleSliceActive .circleSliceRelative {
+  fill: rgba(255, 255, 255, 0.8);
+}
+
+.circleCenter {
+  fill: var(--surface);
+  stroke: var(--border);
+  stroke-width: 2;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.circleCenter:hover {
+  fill: var(--surface-alt);
+  border-color: var(--accent);
+}
+
+.circleCenterExpanded {
+  fill: var(--surface);
+}
+
+.circleCenterLabel {
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 600;
+  fill: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.circleExpandHint {
+  font-size: 10px;
+  fill: var(--text-muted);
+  pointer-events: none;
+}
+
+
 
 
 

@@ -46,22 +46,16 @@ export interface SettingsIconProps {
 }
 
 export interface HeaderProps {
-    settingsOpen: boolean;
-    onSettingsToggle: () => void;
-    onSettingsClose: () => void;
     mode: "manual" | "automatic";
     onModeChange: (mode: "manual" | "automatic") => void;
     clefFilter: ClefFilter;
     onClefChange: (clef: ClefFilter) => void;
-    selectedKey: string;
-    onKeyChange: (key: string) => void;
 }
 
 export interface SettingsPanelProps {
     open: boolean;
     onClose: () => void;
     mode: "manual" | "automatic";
-    onModeChange: (mode: "manual" | "automatic") => void;
     clefFilter: ClefFilter;
     onClefChange: (clef: ClefFilter) => void;
     selectedKey: string;

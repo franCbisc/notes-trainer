@@ -21,7 +21,7 @@ export const MicPrompt: FC<MicPromptProps> = ({
                     <p className="micPromptText">
                         {permission === "unsupported"
                             ? "Your browser does not support microphone access."
-                            : "Microphone access was denied. Please allow it in your browser settings and try again."}
+                            : "Microphone access was denied. Please allow it in your browser settings."}
                     </p>
                     <button className="micBtn micBtnSecondary" onClick={onSwitchToManual}>
                         Switch to manual mode

@@ -1,5 +1,5 @@
 /**
- * Hook for managing quiz settings state (mode, clef filter, key, settings panel)
+ * Hook for managing quiz settings state (mode, clef filter, key)
  */
 
 import { useState, useCallback } from "react";
@@ -11,24 +11,19 @@ export type { QuizMode } from "./types";
 export function useQuizSettings(): QuizSettingsReturn {
     const [clefFilter, setClefFilter] = useState<ClefFilter>("both");
     const [selectedKey, setSelectedKey] = useState<string>("Do");
-    const [mode, setMode] = useState<QuizMode>("manual");
-    const [settingsOpen, setSettingsOpen] = useState(false);
-
-    const toggleSettings = useCallback(() => {
-        setSettingsOpen((o) => !o);
-    }, []);
-
-    const closeSettings = useCallback(() => {
-        setSettingsOpen(false);
-    }, []);
+    const [mode, setMode] = useState<QuizMode>("automatic");
+    const [hasPlayedFirstNote, setHasPlayedFirstNote] = useState(false);
 
     const handleModeChange = useCallback(
         (newMode: QuizMode) => {
             setMode(newMode);
-            setSettingsOpen(false);
         },
         [setMode]
     );
+
+    const markFirstNotePlayed = useCallback(() => {
+        setHasPlayedFirstNote(true);
+    }, []);
 
     return {
         clefFilter,
@@ -37,10 +32,8 @@ export function useQuizSettings(): QuizSettingsReturn {
         setSelectedKey,
         mode,
         setMode,
-        settingsOpen,
-        setSettingsOpen,
-        toggleSettings,
-        closeSettings,
         handleModeChange,
+        hasPlayedFirstNote,
+        markFirstNotePlayed,
     };
 }

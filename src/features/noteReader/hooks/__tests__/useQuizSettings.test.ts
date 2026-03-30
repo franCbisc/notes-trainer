@@ -7,8 +7,7 @@ describe("useQuizSettings", () => {
 
         expect(result.current.clefFilter).toBe("both");
         expect(result.current.selectedKey).toBe("Do");
-        expect(result.current.mode).toBe("manual");
-        expect(result.current.settingsOpen).toBe(false);
+        expect(result.current.mode).toBe("automatic");
     });
 
     it("setClefFilter updates clefFilter", () => {
@@ -41,57 +40,7 @@ describe("useQuizSettings", () => {
         expect(result.current.mode).toBe("automatic");
     });
 
-    it("setSettingsOpen updates settingsOpen", () => {
-        const { result } = renderHook(() => useQuizSettings());
-
-        act(() => {
-            result.current.setSettingsOpen(true);
-        });
-
-        expect(result.current.settingsOpen).toBe(true);
-    });
-
-    it("setSettingsOpen accepts a function updater", () => {
-        const { result } = renderHook(() => useQuizSettings());
-
-        act(() => {
-            result.current.setSettingsOpen((prev) => !prev);
-        });
-
-        expect(result.current.settingsOpen).toBe(true);
-    });
-
-    it("toggleSettings toggles settingsOpen", () => {
-        const { result } = renderHook(() => useQuizSettings());
-
-        act(() => {
-            result.current.toggleSettings();
-        });
-
-        expect(result.current.settingsOpen).toBe(true);
-
-        act(() => {
-            result.current.toggleSettings();
-        });
-
-        expect(result.current.settingsOpen).toBe(false);
-    });
-
-    it("closeSettings sets settingsOpen to false", () => {
-        const { result } = renderHook(() => useQuizSettings());
-
-        act(() => {
-            result.current.setSettingsOpen(true);
-        });
-
-        act(() => {
-            result.current.closeSettings();
-        });
-
-        expect(result.current.settingsOpen).toBe(false);
-    });
-
-    it("handleModeChange updates mode and closes settings", () => {
+    it("handleModeChange updates mode", () => {
         const { result } = renderHook(() => useQuizSettings());
 
         act(() => {
@@ -99,6 +48,17 @@ describe("useQuizSettings", () => {
         });
 
         expect(result.current.mode).toBe("automatic");
-        expect(result.current.settingsOpen).toBe(false);
+    });
+
+    it("markFirstNotePlayed sets hasPlayedFirstNote to true", () => {
+        const { result } = renderHook(() => useQuizSettings());
+
+        expect(result.current.hasPlayedFirstNote).toBe(false);
+
+        act(() => {
+            result.current.markFirstNotePlayed();
+        });
+
+        expect(result.current.hasPlayedFirstNote).toBe(true);
     });
 });

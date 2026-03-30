@@ -171,7 +171,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
 
                     // ── EMITTED: waiting for parent to call consumeNote() ─────
                     case "EMITTED": {
-                        // Do absolutely nothing — the parent is in control here.
+                        // Do nothing — the parent is in control here.
                         break;
                     }
 

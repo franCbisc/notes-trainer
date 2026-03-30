@@ -6,17 +6,14 @@ const defaultProps = {
     open: true,
     onClose: jest.fn(),
     mode: "manual" as const,
-    onModeChange: jest.fn(),
     clefFilter: "both" as const,
     onClefChange: jest.fn(),
-    selectedKey: "Do",
+    selectedKey: "Do - Lam",
     onKeyChange: jest.fn(),
 };
 
 describe("SettingsPanel", () => {
     beforeEach(() => jest.clearAllMocks());
-
-    // ── Visibility ───────────────────────────────────────────────────────────
 
     it("adds settingsPanelOpen class when open=true", () => {
         const { container } = render(<SettingsPanel {...defaultProps} open={true} />);
@@ -28,87 +25,29 @@ describe("SettingsPanel", () => {
         expect(container.firstChild).not.toHaveClass("settingsPanelOpen");
     });
 
-    // ── Mode buttons ─────────────────────────────────────────────────────────
-
-    it("marks Manual button active when mode=manual", () => {
-        render(<SettingsPanel {...defaultProps} mode="manual" />);
-        expect(screen.getByRole("button", { name: "Manual" })).toHaveClass("settingsToggleBtnActive");
-        expect(screen.getByRole("button", { name: "Automatic" })).not.toHaveClass("settingsToggleBtnActive");
-    });
-
-    it("marks Automatic button active when mode=automatic", () => {
-        render(<SettingsPanel {...defaultProps} mode="automatic" />);
-        expect(screen.getByRole("button", { name: "Automatic" })).toHaveClass("settingsToggleBtnActive");
-        expect(screen.getByRole("button", { name: "Manual" })).not.toHaveClass("settingsToggleBtnActive");
-    });
-
-    it("calls onModeChange('manual') when Manual is clicked", () => {
-        const onModeChange = jest.fn();
-        render(<SettingsPanel {...defaultProps} onModeChange={onModeChange} />);
-        fireEvent.click(screen.getByRole("button", { name: "Manual" }));
-        expect(onModeChange).toHaveBeenCalledWith("manual");
-    });
-
-    it("calls onModeChange('automatic') when Automatic is clicked", () => {
-        const onModeChange = jest.fn();
-        render(<SettingsPanel {...defaultProps} onModeChange={onModeChange} />);
-        fireEvent.click(screen.getByRole("button", { name: "Automatic" }));
-        expect(onModeChange).toHaveBeenCalledWith("automatic");
-    });
-
-    // ── Clef buttons ─────────────────────────────────────────────────────────
-
-    it("renders the three clef options", () => {
+    it("renders clef as a select dropdown", () => {
         render(<SettingsPanel {...defaultProps} />);
-        expect(screen.getByRole("button", { name: "Both" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /Treble/i })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /Bass/i })).toBeInTheDocument();
+        const select = screen.getByRole("combobox", { name: "" });
+        expect(select).toBeInTheDocument();
+        expect(select).toHaveValue("both");
     });
 
-    it("marks the active clef button", () => {
-        render(<SettingsPanel {...defaultProps} clefFilter="treble" />);
-        expect(screen.getByRole("button", { name: /Treble/i })).toHaveClass("settingsToggleBtnActive");
-        expect(screen.getByRole("button", { name: "Both" })).not.toHaveClass("settingsToggleBtnActive");
-    });
-
-    it("calls onClefChange with the correct value when a clef button is clicked", () => {
+    it("calls onClefChange when clef is changed", () => {
         const onClefChange = jest.fn();
         render(<SettingsPanel {...defaultProps} onClefChange={onClefChange} />);
-        fireEvent.click(screen.getByRole("button", { name: /Bass/i }));
-        expect(onClefChange).toHaveBeenCalledWith("bass");
+        fireEvent.change(screen.getByRole("combobox", { name: "" }), { target: { value: "treble" } });
+        expect(onClefChange).toHaveBeenCalledWith("treble");
     });
 
-    // ── Key selector ─────────────────────────────────────────────────────────
-
-    it("does not render the key selector in manual mode", () => {
-        render(<SettingsPanel {...defaultProps} mode="manual" />);
-        expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
-    });
-
-    it("renders the key selector in automatic mode", () => {
+    it("renders key hint in automatic mode", () => {
         render(<SettingsPanel {...defaultProps} mode="automatic" />);
-        expect(screen.getByRole("combobox")).toBeInTheDocument();
+        expect(screen.getByText("Use circle below")).toBeInTheDocument();
     });
 
-    it("calls onKeyChange when the key selector changes", () => {
-        const onKeyChange = jest.fn();
-        const Wrapper = () => {
-            const [key, setKey] = useState("Do");
-            return (
-                <SettingsPanel
-                    {...defaultProps}
-                    mode="automatic"
-                    selectedKey={key}
-                    onKeyChange={(k) => { setKey(k); onKeyChange(k); }}
-                />
-            );
-        };
-        render(<Wrapper />);
-        fireEvent.change(screen.getByRole("combobox"), { target: { value: "Re - Sim" } });
-        expect(onKeyChange).toHaveBeenCalledWith("Re - Sim");
+    it("does not render key hint in manual mode", () => {
+        render(<SettingsPanel {...defaultProps} mode="manual" />);
+        expect(screen.queryByText("Use circle below")).not.toBeInTheDocument();
     });
-
-    // ── Outside click ─────────────────────────────────────────────────────────
 
     it("calls onClose when clicking outside the panel", () => {
         const onClose = jest.fn();
@@ -125,7 +64,7 @@ describe("SettingsPanel", () => {
     it("does not call onClose when clicking inside the panel", () => {
         const onClose = jest.fn();
         render(<SettingsPanel {...defaultProps} onClose={onClose} />);
-        fireEvent.mouseDown(screen.getByRole("button", { name: "Manual" }));
+        fireEvent.mouseDown(screen.getByRole("combobox", { name: "" }));
         expect(onClose).not.toHaveBeenCalled();
     });
 
@@ -140,8 +79,6 @@ describe("SettingsPanel", () => {
         fireEvent.mouseDown(screen.getByRole("button", { name: "Outside" }));
         expect(onClose).not.toHaveBeenCalled();
     });
-
-    // ── Escape key ────────────────────────────────────────────────────────────
 
     it("calls onClose when Escape is pressed", () => {
         const onClose = jest.fn();
@@ -164,4 +101,3 @@ describe("SettingsPanel", () => {
         expect(onClose).not.toHaveBeenCalled();
     });
 });
-

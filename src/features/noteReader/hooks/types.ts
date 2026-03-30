@@ -24,11 +24,9 @@ export interface QuizSettingsReturn {
     setSelectedKey: (key: string) => void;
     mode: QuizMode;
     setMode: (mode: QuizMode) => void;
-    settingsOpen: boolean;
-    setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    toggleSettings: () => void;
-    closeSettings: () => void;
     handleModeChange: (mode: QuizMode) => void;
+    hasPlayedFirstNote: boolean;
+    markFirstNotePlayed: () => void;
 }
 
 export interface UseAutomaticModeProps {

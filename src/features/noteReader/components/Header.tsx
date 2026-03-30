@@ -1,115 +1,53 @@
-import React, { FC, useRef, useEffect } from "react";
-import { KEY_SIGNATURE_NAMES } from "../constants";
-import { SettingsIcon } from "./SettingsIcon";
+import React, { FC } from "react";
 import type { HeaderProps } from "./types";
-import { ClefFilter } from "../types";
-
-const CLEF_OPTIONS: { value: ClefFilter; label: string }[] = [
-    { value: "both",   label: "Both" },
-    { value: "treble", label: "𝄞 Treble" },
-    { value: "bass",   label: "𝄢 Bass" },
-];
 
 export const Header: FC<HeaderProps> = ({
-    settingsOpen,
-    onSettingsToggle,
-    onSettingsClose,
     mode,
     onModeChange,
     clefFilter,
     onClefChange,
-    selectedKey,
-    onKeyChange,
 }) => {
-    const settingsBtnRef = useRef<HTMLButtonElement>(null);
-    const panelRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!settingsOpen) return;
-        const handle = (e: MouseEvent) => {
-            if (
-                panelRef.current &&
-                !panelRef.current.contains(e.target as Node) &&
-                !settingsBtnRef.current?.contains(e.target as Node)
-            ) {
-                onSettingsClose();
-            }
-        };
-        document.addEventListener("mousedown", handle);
-        return () => document.removeEventListener("mousedown", handle);
-    }, [settingsOpen, onSettingsClose]);
-
-    useEffect(() => {
-        if (!settingsOpen) return;
-        const handle = (e: KeyboardEvent) => { if (e.key === "Escape") onSettingsClose(); };
-        document.addEventListener("keydown", handle);
-        return () => document.removeEventListener("keydown", handle);
-    }, [settingsOpen, onSettingsClose]);
-
     return (
         <header className="header">
-            <div className="settingsAnchor">
-                <button
-                    ref={settingsBtnRef}
-                    className={`settingsBtn${settingsOpen ? " settingsBtnActive" : ""}`}
-                    onClick={onSettingsToggle}
-                    aria-label="Settings"
-                    aria-expanded={settingsOpen}
-                >
-                    <SettingsIcon />
-                </button>
-                <div className={`settingsPanel${settingsOpen ? " settingsPanelOpen" : ""}`} ref={panelRef}>
-                    <div className="settingsRow">
-                        <span className="settingsLabel">Mode</span>
-                        <div className="settingsToggleGroup">
-                            <button
-                                className={`settingsToggleBtn${mode === "manual" ? " settingsToggleBtnActive" : ""}`}
-                                onClick={() => onModeChange("manual")}
-                            >
-                                Manual
-                            </button>
-                            <button
-                                className={`settingsToggleBtn${mode === "automatic" ? " settingsToggleBtnActive" : ""}`}
-                                onClick={() => onModeChange("automatic")}
-                            >
-                                Automatic
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="settingsRow">
-                        <span className="settingsLabel">Clef</span>
-                        <div className="settingsToggleGroup">
-                            {CLEF_OPTIONS.map(({ value, label }) => (
-                                <button
-                                    key={value}
-                                    className={`settingsToggleBtn${clefFilter === value ? " settingsToggleBtnActive" : ""}`}
-                                    onClick={() => onClefChange(value)}
-                                >
-                                    {label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    {mode === "automatic" && (
-                        <div className="settingsRow">
-                            <span className="settingsLabel">Key Signature</span>
-                            <select
-                                className="settingsSelect"
-                                value={selectedKey}
-                                onChange={(e) => onKeyChange(e.target.value)}
-                            >
-                                {KEY_SIGNATURE_NAMES.map((name) => (
-                                    <option key={name} value={name}>{name}</option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+            <div className="headerLeft">
+                <div className="modeSwitch">
+                    <span className={`modeLabel${mode === "manual" ? " modeLabelActive" : ""}`}>Manual</span>
+                    <button
+                        className="modeToggle"
+                        onClick={() => onModeChange(mode === "manual" ? "automatic" : "manual")}
+                        aria-label={`Switch to ${mode === "manual" ? "automatic" : "manual"} mode`}
+                    >
+                        <span className={`modeToggleKnob${mode === "automatic" ? " modeToggleKnobOn" : ""}`} />
+                    </button>
+                    <span className={`modeLabel${mode === "automatic" ? " modeLabelActive" : ""}`}>Auto</span>
                 </div>
             </div>
-            <h1 className="title">Notes trainer</h1>
-            <div className="headerSpacer" aria-hidden="true" />
+
+            <div className="headerRight">
+                <div className="clefButtons">
+                    <button
+                        className={`clefBtn${clefFilter === "both" ? " clefBtnActive" : ""}`}
+                        onClick={() => onClefChange("both")}
+                        aria-pressed={clefFilter === "both"}
+                    >
+                        Both
+                    </button>
+                    <button
+                        className={`clefBtn${clefFilter === "treble" ? " clefBtnActive" : ""}`}
+                        onClick={() => onClefChange("treble")}
+                        aria-pressed={clefFilter === "treble"}
+                    >
+                        <span className="clefBtnSymbol">𝄞</span>
+                    </button>
+                    <button
+                        className={`clefBtn${clefFilter === "bass" ? " clefBtnActive" : ""}`}
+                        onClick={() => onClefChange("bass")}
+                        aria-pressed={clefFilter === "bass"}
+                    >
+                        <span className="clefBtnSymbol">𝄢</span>
+                    </button>
+                </div>
+            </div>
         </header>
     );
 };
