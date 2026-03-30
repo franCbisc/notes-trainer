@@ -5,6 +5,6 @@ export { TrebleClef } from "./TrebleClef";
 export { BassClef } from "./BassClef";
 export { AnswersButtons } from "./AnswersButtons";
 export { KeySignatureAccidentals } from "./KeySignatureAccidentals";
-export { SettingsPanel } from "./SettingsPanel";
 export { SettingsIcon } from "./SettingsIcon";
 export { MicPrompt } from "./MicPrompt";
+export { Header } from "./Header";

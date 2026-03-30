@@ -3,7 +3,7 @@
  */
 
 import React, { FC, useEffect, useMemo } from "react";
-import { GrandStaff, AnswersButtons, SettingsPanel, SettingsIcon, MicPrompt } from "./components";
+import { GrandStaff, AnswersButtons, MicPrompt, Header } from "./components";
 import {
     useNoteGeneration,
     useQuizState,
@@ -24,7 +24,6 @@ export const NoteReaderPage: FC = () => {
         setMode,
         settingsOpen,
         setSettingsOpen,
-        settingsBtnRef,
     } = useQuizSettings();
 
     const keyAccidentals = useMemo(
@@ -61,15 +60,15 @@ export const NoteReaderPage: FC = () => {
 
     useEffect(() => {
         advance(generateRandomNote());
-    }, [clefFilter]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [clefFilter]);
 
     useEffect(() => {
         advance(generateRandomNote());
-    }, [selectedKey]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [selectedKey]);
 
     useEffect(() => {
         advance(generateRandomNote());
-    }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [mode]);
 
     useEffect(() => {
         if (answered !== "correct") return;
@@ -78,7 +77,7 @@ export const NoteReaderPage: FC = () => {
             advance(generateRandomNote(current || undefined));
         }, 300);
         return () => clearTimeout(timer);
-    }, [answered]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [answered]);
 
     if (!current) {
         return <div className="root">Loading...</div>;
@@ -86,31 +85,17 @@ export const NoteReaderPage: FC = () => {
 
     return (
         <div className="root">
-            <header className="header">
-                <div className="settingsAnchor">
-                    <button
-                        ref={settingsBtnRef}
-                        className={`settingsBtn${settingsOpen ? " settingsBtnActive" : ""}`}
-                        onClick={() => setSettingsOpen((o) => !o)}
-                        aria-label="Settings"
-                        aria-expanded={settingsOpen}
-                    >
-                        <SettingsIcon />
-                    </button>
-                    <SettingsPanel
-                        open={settingsOpen}
-                        onClose={() => setSettingsOpen(false)}
-                        mode={mode}
-                        onModeChange={(m) => { setMode(m); setSettingsOpen(false); }}
-                        clefFilter={clefFilter}
-                        onClefChange={setClefFilter}
-                        selectedKey={selectedKey}
-                        onKeyChange={setSelectedKey}
-                    />
-                </div>
-                <h1 className="title">Notes trainer</h1>
-                <div className="headerSpacer" aria-hidden="true" />
-            </header>
+            <Header
+                settingsOpen={settingsOpen}
+                onSettingsToggle={() => setSettingsOpen((o) => !o)}
+                onSettingsClose={() => setSettingsOpen(false)}
+                mode={mode}
+                onModeChange={(m) => { setMode(m); setSettingsOpen(false); }}
+                clefFilter={clefFilter}
+                onClefChange={setClefFilter}
+                selectedKey={selectedKey}
+                onKeyChange={setSelectedKey}
+            />
 
             {mode === "automatic" && permission === "granted" && (
                 <div className="listeningIndicator">

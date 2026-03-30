@@ -9,7 +9,6 @@ describe("useQuizSettings", () => {
         expect(result.current.selectedKey).toBe("Do");
         expect(result.current.mode).toBe("manual");
         expect(result.current.settingsOpen).toBe(false);
-        expect(result.current.settingsBtnRef.current).toBeNull();
     });
 
     it("setClefFilter updates clefFilter", () => {

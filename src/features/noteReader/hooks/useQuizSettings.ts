@@ -2,8 +2,7 @@
  * Hook for managing quiz settings state (mode, clef filter, key, settings panel)
  */
 
-import React, { useRef, useState } from "react";
-import type { RefObject } from "react";
+import { useState } from "react";
 import type { ClefFilter } from "../types";
 
 export type QuizMode = "manual" | "automatic";
@@ -17,7 +16,6 @@ interface QuizSettingsReturn {
     setMode: (mode: QuizMode) => void;
     settingsOpen: boolean;
     setSettingsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    settingsBtnRef: RefObject<HTMLButtonElement>;
 }
 
 export function useQuizSettings(): QuizSettingsReturn {
@@ -25,7 +23,6 @@ export function useQuizSettings(): QuizSettingsReturn {
     const [selectedKey, setSelectedKey] = useState<string>("Do");
     const [mode, setMode] = useState<QuizMode>("manual");
     const [settingsOpen, setSettingsOpen] = useState(false);
-    const settingsBtnRef = useRef<HTMLButtonElement>(null);
 
     return {
         clefFilter,
@@ -36,6 +33,5 @@ export function useQuizSettings(): QuizSettingsReturn {
         setMode,
         settingsOpen,
         setSettingsOpen,
-        settingsBtnRef,
     };
 }

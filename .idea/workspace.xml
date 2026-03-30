@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2e564268-61cc-4c2a-b5a0-0e294d633c51" name="Changes" comment="extracted MicProp component">
-      <change afterPath="$PROJECT_DIR$/src/features/noteReader/components/MicPrompt.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/MicPrompt.test.tsx" afterDir="false" />
+    <list default="true" id="2e564268-61cc-4c2a-b5a0-0e294d633c51" name="Changes" comment="extracted Setting component">
+      <change afterPath="$PROJECT_DIR$/src/features/noteReader/components/Header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/Header.test.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/features/noteReader/NoteReaderPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/NoteReaderPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/BassClef.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/BassClef.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/GrandStaff.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/GrandStaff.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/TrebleClef.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/TrebleClef.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/BassClef.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/BassClef.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/TrebleClef.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/__tests__/TrebleClef.test.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/features/noteReader/components/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/components/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/hooks/__tests__/useQuizSettings.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/hooks/__tests__/useQuizSettings.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/hooks/useQuizSettings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/hooks/useQuizSettings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/features/noteReader/utils/pitchUtils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/features/noteReader/utils/pitchUtils.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +92,17 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="notes-trainer" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="notes-trainer" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -124,6 +131,8 @@
       <workItem from="1773430740212" duration="7802000" />
       <workItem from="1773511864047" duration="5176000" />
       <workItem from="1774039880427" duration="4668000" />
+      <workItem from="1774106258511" duration="1494000" />
+      <workItem from="1774894598542" duration="172000" />
     </task>
     <task id="LOCAL-00001" summary="removed 3rd ledger below and above">
       <option name="closed" value="true" />

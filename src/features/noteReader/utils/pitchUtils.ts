@@ -1,7 +1,5 @@
 /**
- * Pure utility functions for pitch detection and note mapping.
- *
- * Frequency → MIDI → note name (Italian notation, with sharps and flats).
+ * Utility functions for pitch detection and note mapping.
  *
  * The mapping uses the standard equal-tempered scale (A4 = 440 Hz).
  * Each semitone is rounded to the nearest half-step so that, e.g., a C# and a
@@ -11,14 +9,10 @@
  * Pitch detection must match those names so the quiz answer-checking works.
  * Sharps and flats are therefore represented as their enharmonic Italian names:
  *   C# / Db → Do#
- *   D# / Eb → Re#   (enharmonically Mib, but we prefer the sharp spelling)
+ *   D# / Eb → Re#
  *   F# / Gb → Fa#
  *   G# / Ab → Sol#
  *   A# / Bb → La#
- *
- * Because the quiz currently only tests natural notes (Do, Re, Mi, Fa, Sol, La, Si),
- * non-natural notes will never match a quiz answer, but the detection is still
- * useful for feedback and future expansion.
  */
 
 /** Minimum clarity (0–1) from pitchy for a pitch to be considered valid. */
@@ -47,18 +41,18 @@ export function isPianoFrequency(frequencyHz: number): boolean {
  * Accidentals use the sharp spelling so they are consistent across octaves.
  */
 const SEMITONE_TO_ITALIAN: readonly string[] = [
-    "Do",   // 0  C
-    "Do#",  // 1  C# / Db
-    "Re",   // 2  D
-    "Re#",  // 3  D# / Eb
-    "Mi",   // 4  E
-    "Fa",   // 5  F
-    "Fa#",  // 6  F# / Gb
-    "Sol",  // 7  G
-    "Sol#", // 8  G# / Ab
-    "La",   // 9  A
-    "La#",  // 10 A# / Bb
-    "Si",   // 11 B
+    "Do",
+    "Do#",
+    "Re",
+    "Re#",
+    "Mi",
+    "Fa",
+    "Fa#",
+    "Sol",
+    "Sol#",
+    "La",
+    "La#",
+    "Si",
 ];
 
 /**
