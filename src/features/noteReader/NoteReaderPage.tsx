@@ -2,7 +2,7 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useMemo } from "react";
 import { GrandStaff, AnswersButtons, MicPrompt, Header } from "./components";
 import {
     useNoteGeneration,
@@ -10,6 +10,7 @@ import {
     usePitchDetection,
     useQuizSettings,
     useAutomaticMode,
+    useQuizLifecycle,
 } from "./hooks";
 import { NOTE_NAMES, KEY_SIGNATURES } from "./constants";
 import "../../style.css";
@@ -24,6 +25,9 @@ export const NoteReaderPage: FC = () => {
         setMode,
         settingsOpen,
         setSettingsOpen,
+        toggleSettings,
+        closeSettings,
+        handleModeChange,
     } = useQuizSettings();
 
     const keyAccidentals = useMemo(
@@ -34,7 +38,7 @@ export const NoteReaderPage: FC = () => {
     const { generateRandomNote } = useNoteGeneration(clefFilter, keyAccidentals);
     const { current, answered, selected, advance, handleAnswer } =
         useQuizState(generateRandomNote);
-    const { detectedPitch, isListening, permission, startListening, stopListening, consumeNote } =
+    const { detectedPitch, permission, startListening, stopListening, consumeNote } =
         usePitchDetection();
 
     const {
@@ -52,32 +56,15 @@ export const NoteReaderPage: FC = () => {
         onStopListening: stopListening,
     });
 
-    useEffect(() => {
-        if (!current) {
-            advance(generateRandomNote());
-        }
-    }, [current, advance, generateRandomNote]);
-
-    useEffect(() => {
-        advance(generateRandomNote());
-    }, [clefFilter]);
-
-    useEffect(() => {
-        advance(generateRandomNote());
-    }, [selectedKey]);
-
-    useEffect(() => {
-        advance(generateRandomNote());
-    }, [mode]);
-
-    useEffect(() => {
-        if (answered !== "correct") return;
-
-        const timer = setTimeout(() => {
-            advance(generateRandomNote(current || undefined));
-        }, 300);
-        return () => clearTimeout(timer);
-    }, [answered]);
+    useQuizLifecycle({
+        current,
+        answered,
+        advance,
+        generateRandomNote,
+        clefFilter,
+        selectedKey,
+        mode,
+    });
 
     if (!current) {
         return <div className="root">Loading...</div>;
@@ -87,10 +74,10 @@ export const NoteReaderPage: FC = () => {
         <div className="root">
             <Header
                 settingsOpen={settingsOpen}
-                onSettingsToggle={() => setSettingsOpen((o) => !o)}
-                onSettingsClose={() => setSettingsOpen(false)}
+                onSettingsToggle={toggleSettings}
+                onSettingsClose={closeSettings}
                 mode={mode}
-                onModeChange={(m) => { setMode(m); setSettingsOpen(false); }}
+                onModeChange={handleModeChange}
                 clefFilter={clefFilter}
                 onClefChange={setClefFilter}
                 selectedKey={selectedKey}

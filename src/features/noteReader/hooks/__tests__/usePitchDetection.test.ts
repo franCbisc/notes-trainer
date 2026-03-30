@@ -9,6 +9,7 @@ import {
 // ─── Mock pitchUtils (use real implementations, but allow per-test overrides) ─
 let forceFrequencyToNoteNull = false;
 let forceFrequencyToNoteNullForCorrected = false;
+let correctedFreqToReturnNull: number | null = null;
 
 jest.mock("../../utils/pitchUtils", () => {
     const real = jest.requireActual<typeof import("../../utils/pitchUtils")>(
@@ -19,6 +20,7 @@ jest.mock("../../utils/pitchUtils", () => {
         frequencyToNoteWithMidi: (freq: number) => {
             if (forceFrequencyToNoteNull) return null;
             if (forceFrequencyToNoteNullForCorrected && freq !== 440 && freq !== 880) return null;
+            if (correctedFreqToReturnNull !== null && Math.abs(freq - correctedFreqToReturnNull) < 1) return null;
             return real.frequencyToNoteWithMidi(freq);
         },
     };
@@ -507,6 +509,79 @@ describe("usePitchDetection", () => {
 
         // STABLE_FRAMES La5 (880 Hz) frames — corrected DOWN to MIDI 69
         tickFrames(STABLE_FRAMES);
+        expect(result.current.detectedPitch?.midi).toBe(69);
+    });
+
+    it("uses raw.name when octave is corrected but correctedFreqName is null", async () => {
+        // Seed with 440 Hz (MIDI 69), then send 880 Hz which corrects down to MIDI 69.
+        // The corrected frequency for MIDI 69 is 440 Hz.
+        // We set the mock to return null for 440 Hz AFTER seeding is done.
+        let callCount = 0;
+        mockFindPitch = jest.fn().mockImplementation(() => {
+            callCount++;
+            if (callCount <= 3) return [440, 0.95]; // La4 - seed with 440
+            // After seed, return null for 440 Hz (the corrected frequency)
+            if (callCount === 4) correctedFreqToReturnNull = 440;
+            return [880, 0.95]; // La5 - corrected to MIDI 69 -> correctedFreq = 440 Hz
+        });
+
+        mockRequestMic.mockImplementation(async () => {
+            mockPermission = "granted";
+            mockAudioContext = buildMockAudioContext();
+            mockMediaStream = { getTracks: () => [] };
+        });
+
+        const { result, rerender } = renderHook(() => usePitchDetection());
+
+        await act(async () => {
+            await result.current.startListening();
+        });
+
+        rerender();
+
+        tickFrames(3);
+        expect(result.current.detectedPitch).toBeNull();
+
+        tickFrames(STABLE_FRAMES);
+        // correctedMidi (69) !== raw.midi (81), so else branch taken
+        // correctedFreqName is null (mocked), so ?? falls back to raw.name
+        expect(result.current.detectedPitch?.note).toBe("La");
+        expect(result.current.detectedPitch?.midi).toBe(69);
+
+        // Cleanup
+        correctedFreqToReturnNull = null;
+    });
+
+    it("uses correctedFreqName when octave is corrected and correctedFreqName is not null", async () => {
+        // Seed 3 frames of La4 (MIDI 69 / 440 Hz), then send La5 (MIDI 81 / 880 Hz).
+        // This triggers: correctedMidi !== raw.midi AND correctedFreqName is not null
+        let callCount = 0;
+        mockFindPitch = jest.fn().mockImplementation(() => {
+            callCount++;
+            if (callCount <= 3) return [440, 0.95];
+            return [880, 0.95];
+        });
+
+        mockRequestMic.mockImplementation(async () => {
+            mockPermission = "granted";
+            mockAudioContext = buildMockAudioContext();
+            mockMediaStream = { getTracks: () => [] };
+        });
+
+        const { result, rerender } = renderHook(() => usePitchDetection());
+
+        await act(async () => {
+            await result.current.startListening();
+        });
+
+        rerender();
+
+        tickFrames(3);
+        expect(result.current.detectedPitch).toBeNull();
+
+        tickFrames(STABLE_FRAMES);
+        // correctedMidi (69) !== raw.midi (81), so uses correctedFreqName
+        expect(result.current.detectedPitch?.note).toBe("La");
         expect(result.current.detectedPitch?.midi).toBe(69);
     });
 

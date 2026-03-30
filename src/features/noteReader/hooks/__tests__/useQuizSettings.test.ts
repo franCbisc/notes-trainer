@@ -60,4 +60,45 @@ describe("useQuizSettings", () => {
 
         expect(result.current.settingsOpen).toBe(true);
     });
+
+    it("toggleSettings toggles settingsOpen", () => {
+        const { result } = renderHook(() => useQuizSettings());
+
+        act(() => {
+            result.current.toggleSettings();
+        });
+
+        expect(result.current.settingsOpen).toBe(true);
+
+        act(() => {
+            result.current.toggleSettings();
+        });
+
+        expect(result.current.settingsOpen).toBe(false);
+    });
+
+    it("closeSettings sets settingsOpen to false", () => {
+        const { result } = renderHook(() => useQuizSettings());
+
+        act(() => {
+            result.current.setSettingsOpen(true);
+        });
+
+        act(() => {
+            result.current.closeSettings();
+        });
+
+        expect(result.current.settingsOpen).toBe(false);
+    });
+
+    it("handleModeChange updates mode and closes settings", () => {
+        const { result } = renderHook(() => useQuizSettings());
+
+        act(() => {
+            result.current.handleModeChange("automatic");
+        });
+
+        expect(result.current.mode).toBe("automatic");
+        expect(result.current.settingsOpen).toBe(false);
+    });
 });

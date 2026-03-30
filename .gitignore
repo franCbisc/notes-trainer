@@ -9,3 +9,6 @@ coverage/
 # Compiled Vite config outputs
 vite.config.js
 vite.config.d.ts
+
+# JetBrains IDE
+.idea/

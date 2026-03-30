@@ -10,4 +10,5 @@ export type { MicPermission as PermissionStatus } from "./useMicrophone";
 export { useQuizSettings } from "./useQuizSettings";
 export type { QuizMode } from "./useQuizSettings";
 export { useAutomaticMode } from "./useAutomaticMode";
+export { useQuizLifecycle } from "./useQuizLifecycle";
 

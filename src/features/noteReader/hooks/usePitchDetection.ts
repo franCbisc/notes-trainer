@@ -151,7 +151,6 @@ export function usePitchDetection(): UsePitchDetectionReturn {
                         const correctedFreqName = frequencyToNoteWithMidi(
                             440 * Math.pow(2, (correctedMidi - 69) / 12),
                         )?.name;
-                        // istanbul ignore next — corrected piano MIDI always maps to a valid note
                         const note = correctedMidi === raw.midi
                             ? raw.name
                             : (correctedFreqName ?? raw.name);
@@ -165,10 +164,6 @@ export function usePitchDetection(): UsePitchDetectionReturn {
 
                         if (candidateFramesRef.current >= STABLE_FRAMES) {
                             stateRef.current = "EMITTED";
-                            console.debug(
-                                `[pitch] ${freq.toFixed(1)} Hz → ${note} ` +
-                                `MIDI ${correctedMidi} (clarity ${(cl * 100).toFixed(1)}%)`,
-                            );
                             setDetectedPitch({ note, midi: correctedMidi, frequency: freq, clarity: cl });
                         }
                         break;
