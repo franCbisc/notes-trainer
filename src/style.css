@@ -148,7 +148,7 @@ body {
 }
 
 .modeLabel {
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   font-family: 'DM Mono', monospace;
   color: var(--text-muted);
   letter-spacing: 0.08em;
@@ -163,9 +163,9 @@ body {
 
 .modeToggle {
   position: relative;
-  width: 48px;
-  height: 26px;
-  border-radius: 13px;
+  width: 56px;
+  height: 32px;
+  border-radius: 16px;
   border: 2px solid var(--border);
   background: var(--surface-alt);
   cursor: pointer;
@@ -181,15 +181,15 @@ body {
   position: absolute;
   top: 3px;
   left: 3px;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: var(--text-muted);
   transition: transform 0.15s, background 0.15s;
 }
 
 .modeToggleKnobOn {
-  transform: translateX(20px);
+  transform: translateX(24px);
   background: var(--accent);
 }
 
@@ -204,14 +204,14 @@ body {
 }
 
 .clefBtn {
-  height: 36px;
-  min-width: 36px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 8px;
   border: none;
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-family: 'DM Mono', monospace;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -220,7 +220,7 @@ body {
 }
 
 .clefBtnSymbol {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0;
 }
@@ -362,8 +362,8 @@ body {
 }
 
 .circleOfFifthsWrapper {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   transition: all 0.3s ease;
   z-index: 10;
 }
@@ -372,7 +372,7 @@ body {
   position: absolute;
   bottom: 8px;
   left: 50%;
-  transform: translateX(-50%) scale(3.5);
+  transform: translateX(-50%) scale(3);
 }
 
 .circleOfFifths {
@@ -442,7 +442,7 @@ body {
 }
 
 .circleCenterLabel {
-  font-size: 10px;
+  font-size: 12px;
   font-family: 'DM Mono', monospace;
   font-weight: 600;
   fill: var(--text);
