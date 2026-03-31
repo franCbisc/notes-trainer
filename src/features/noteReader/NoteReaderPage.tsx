@@ -2,7 +2,7 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useMemo, useEffect, useCallback } from "react";
+import React, { FC, useMemo, useEffect } from "react";
 import { GrandStaff, AnswersButtons, MicPrompt, Header, CircleOfFifths, ListeningIndicator, Feedback } from "./components";
 import {
     useNoteGeneration,

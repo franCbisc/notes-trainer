@@ -55,7 +55,7 @@ describe("useQuizLifecycle", () => {
         const advance = jest.fn();
         const generateRandomNote = jest.fn().mockReturnValue(createNote());
 
-        const { result, rerender } = renderHook(
+        const { rerender } = renderHook(
             ({ answered }: { answered: "correct" | "wrong" | null }) =>
                 useQuizLifecycle({
                     current: createNote(),

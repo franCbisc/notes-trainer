@@ -1,6 +1,6 @@
 import { FC } from "react";
 import type { AnswerStatus } from "../../types";
-import type { QuizMode } from "../../hooks/types";
+import type { QuizMode } from "../../types";
 
 export interface FeedbackProps {
     answered: AnswerStatus;

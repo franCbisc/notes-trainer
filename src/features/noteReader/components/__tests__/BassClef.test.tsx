@@ -3,8 +3,6 @@ import { render } from "@testing-library/react";
 import { BassClef } from "../notation/BassClef";
 import { STAFF_PADDING, COLORS } from "../../constants";
 
-const CY = 236;
-
 describe("BassClef", () => {
     it("renders a text element with the bass clef character", () => {
         const { container } = render(

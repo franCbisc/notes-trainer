@@ -3,7 +3,7 @@
  */
 
 import React, { FC, useMemo } from "react";
-import { NoteHeadProps } from "../types";
+import type { NoteHeadProps } from "../../types";
 import {
     HALF_SPACING,
     NOTE_X,

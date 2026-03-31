@@ -1,5 +1,3 @@
-import { DETECTION_INTERVAL_MS } from "../timing";
-
 /** Larger buffer = better low-note accuracy (~186ms window @ 44.1kHz). */
 export const BUFFER_SIZE = 8192;
 

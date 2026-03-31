@@ -3,7 +3,7 @@
  */
 
 import React, { FC } from "react";
-import { GrandStaffProps } from "../types";
+import type { GrandStaffProps } from "../../types";
 import { StaffLines } from "./StaffLines";
 import { NoteHead } from "./NoteHead";
 import { TrebleClef } from "./TrebleClef";

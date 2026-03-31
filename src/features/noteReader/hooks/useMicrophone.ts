@@ -10,8 +10,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from "react";
-
-export type MicPermission = "idle" | "requesting" | "granted" | "denied" | "unsupported";
+import type { MicPermission } from "../types";
 
 export interface UseMicrophoneReturn {
     permission: MicPermission;

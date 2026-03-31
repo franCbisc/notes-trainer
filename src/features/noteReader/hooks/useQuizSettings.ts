@@ -3,8 +3,7 @@
  */
 
 import { useState, useCallback } from "react";
-import type { ClefFilter } from "../types";
-import type { QuizMode, QuizSettingsReturn } from "./types";
+import type { ClefFilter, QuizMode, QuizSettingsReturn } from "../types";
 
 export function useQuizSettings(): QuizSettingsReturn {
     const [clefFilter, setClefFilter] = useState<ClefFilter>("both");

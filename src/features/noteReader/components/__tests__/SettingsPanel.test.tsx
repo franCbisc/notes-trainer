@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { SettingsPanel } from "../overlays/SettingsPanel";
 
@@ -8,8 +8,6 @@ const defaultProps = {
     mode: "manual" as const,
     clefFilter: "both" as const,
     onClefChange: jest.fn(),
-    selectedKey: "Do - Lam",
-    onKeyChange: jest.fn(),
 };
 
 describe("SettingsPanel", () => {

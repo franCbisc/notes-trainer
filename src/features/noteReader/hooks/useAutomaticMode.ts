@@ -4,9 +4,7 @@
  */
 
 import { useEffect } from "react";
-import type { DetectedPitch } from "../types";
-import type { UseAutomaticModeProps, UseAutomaticModeReturn } from "./types";
-import type { MicPermission } from "./useMicrophone";
+import type { UseAutomaticModeProps, UseAutomaticModeReturn } from "../types";
 
 export function useAutomaticMode({
     mode,

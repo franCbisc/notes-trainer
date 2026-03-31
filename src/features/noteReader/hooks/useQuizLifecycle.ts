@@ -3,7 +3,7 @@
  */
 
 import { useEffect, useRef } from "react";
-import type { UseQuizLifecycleProps } from "./types";
+import type { UseQuizLifecycleProps } from "../types";
 import { CORRECT_ANSWER_ADVANCE_DELAY_MS } from "../timing";
 
 export function useQuizLifecycle({

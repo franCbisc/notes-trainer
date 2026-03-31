@@ -1,4 +1,4 @@
-import { act, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { useAutomaticMode } from "../useAutomaticMode";
 
 describe("useAutomaticMode", () => {
