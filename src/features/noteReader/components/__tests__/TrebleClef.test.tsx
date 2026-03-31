@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { TrebleClef } from "../TrebleClef";
+import { TrebleClef } from "../notation/TrebleClef";
 import { STAFF_PADDING, COLORS } from "../../constants";
 
 const CY = 110;

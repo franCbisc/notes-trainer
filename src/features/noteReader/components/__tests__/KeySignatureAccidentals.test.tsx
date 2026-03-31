@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { KeySignatureAccidentals } from "../KeySignatureAccidentals";
+import { KeySignatureAccidentals } from "../notation/KeySignatureAccidentals";
 import { KeyAccidental } from "../../types";
 
 const sharpFa: KeyAccidental = { baseName: "Fa", accidental: "#", trebleStep: 4, bassStep: 2 };

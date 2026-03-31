@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { BassClef } from "../BassClef";
+import { BassClef } from "../notation/BassClef";
 import { STAFF_PADDING, COLORS } from "../../constants";
 
 const CY = 236;
@@ -9,7 +9,7 @@ describe("BassClef", () => {
     it("renders a text element with the bass clef character", () => {
         const { container } = render(
             <svg>
-                <BassClef cy={CY} />
+                <BassClef />
             </svg>
         );
 
@@ -21,7 +21,7 @@ describe("BassClef", () => {
     it("uses the correct x position", () => {
         const { container } = render(
             <svg>
-                <BassClef cy={CY} />
+                <BassClef />
             </svg>
         );
 
@@ -32,7 +32,7 @@ describe("BassClef", () => {
     it("uses the correct fill color", () => {
         const { container } = render(
             <svg>
-                <BassClef cy={CY} />
+                <BassClef />
             </svg>
         );
 

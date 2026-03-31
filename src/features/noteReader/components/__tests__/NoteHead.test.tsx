@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { NoteHead } from "../NoteHead";
+import { NoteHead } from "../notation/NoteHead";
 import { COLORS, HALF_SPACING } from "../../constants";
 
 const CY = 110;

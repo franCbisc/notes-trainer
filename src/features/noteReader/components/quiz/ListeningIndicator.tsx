@@ -1,5 +1,5 @@
 import { FC } from "react";
-import type { DetectedPitch } from "../types";
+import type { DetectedPitch } from "../../types";
 
 export interface ListeningIndicatorProps {
     isListening: boolean;

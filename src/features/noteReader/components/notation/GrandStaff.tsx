@@ -3,13 +3,13 @@
  */
 
 import React, { FC } from "react";
-import { GrandStaffProps } from "./types";
+import { GrandStaffProps } from "../types";
 import { StaffLines } from "./StaffLines";
 import { NoteHead } from "./NoteHead";
 import { TrebleClef } from "./TrebleClef";
 import { BassClef } from "./BassClef";
 import { KeySignatureAccidentals } from "./KeySignatureAccidentals";
-import { SVG_WIDTH, STAFF_HEIGHT, STAFF_PADDING, TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../constants";
+import { SVG_WIDTH, STAFF_HEIGHT, STAFF_PADDING, TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../../constants";
 
 export const GrandStaff: FC<GrandStaffProps> = ({ current, answered, correct, keyAccidentals = [] }) => {
     const answerStatus = answered ? (correct ? "correct" : "wrong") : null;

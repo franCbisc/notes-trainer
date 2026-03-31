@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { ListeningIndicator } from "../ListeningIndicator";
+import { ListeningIndicator } from "../quiz/ListeningIndicator";
 
 describe("ListeningIndicator", () => {
     it("renders Ready when not listening", () => {

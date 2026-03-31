@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { GrandStaff } from "../GrandStaff";
+import { GrandStaff } from "../notation/GrandStaff";
 import { Note } from "../../types";
 import { SVG_WIDTH, STAFF_HEIGHT } from "../../constants";
 

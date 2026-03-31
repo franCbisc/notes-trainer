@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { Feedback } from "../Feedback";
+import { Feedback } from "../quiz/Feedback";
 
 describe("Feedback", () => {
     it("renders nothing when answered is null", () => {

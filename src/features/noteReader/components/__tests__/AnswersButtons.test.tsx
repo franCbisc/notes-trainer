@@ -1,18 +1,14 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { AnswersButtons } from "../AnswersButtons";
-import { Note } from "../../types";
+import { AnswersButtons } from "../quiz/AnswersButtons";
 
 const NOTE_NAMES = ["Do", "Re", "Mi", "Fa", "Sol", "La", "Si"] as const;
-
-const currentNote: Note = { step: 0, name: "Si", clef: "treble" };
 
 describe("AnswersButtons", () => {
     it("renders a button for each note name", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected={null}
                 answered={null}
                 onAnswer={jest.fn()}
@@ -29,7 +25,6 @@ describe("AnswersButtons", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected={null}
                 answered={null}
                 onAnswer={onAnswer}
@@ -44,7 +39,6 @@ describe("AnswersButtons", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected="Si"
                 answered="correct"
                 onAnswer={jest.fn()}
@@ -60,7 +54,6 @@ describe("AnswersButtons", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected="Re"
                 answered="wrong"
                 onAnswer={jest.fn()}
@@ -76,7 +69,6 @@ describe("AnswersButtons", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected="Si"
                 answered="correct"
                 onAnswer={jest.fn()}
@@ -90,7 +82,6 @@ describe("AnswersButtons", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected="Re"
                 answered="wrong"
                 onAnswer={jest.fn()}
@@ -104,7 +95,6 @@ describe("AnswersButtons", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected="Re"
                 answered="wrong"
                 onAnswer={jest.fn()}
@@ -124,7 +114,6 @@ describe("AnswersButtons", () => {
         render(
             <AnswersButtons
                 noteNames={NOTE_NAMES}
-                current={currentNote}
                 selected={null}
                 answered={null}
                 onAnswer={jest.fn()}
@@ -140,4 +129,3 @@ describe("AnswersButtons", () => {
         });
     });
 });
-

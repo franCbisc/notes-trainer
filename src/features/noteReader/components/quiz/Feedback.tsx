@@ -1,5 +1,5 @@
 import { FC } from "react";
-import type { AnswerStatus } from "../types";
+import type { AnswerStatus } from "../../types";
 
 export interface FeedbackProps {
     answered: AnswerStatus;

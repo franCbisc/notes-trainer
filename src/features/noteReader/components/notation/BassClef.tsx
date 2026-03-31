@@ -3,7 +3,7 @@
  */
 
 import React, { FC } from "react";
-import { STAFF_PADDING, COLORS } from "../constants";
+import { STAFF_PADDING, COLORS } from "../../constants";
 
 export const BassClef: FC = () => {
     const bassClefChar = "𝄢";

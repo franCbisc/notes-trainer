@@ -3,8 +3,8 @@
  */
 
 import React, { FC } from "react";
-import { TrebleClefProps } from "./types";
-import { STAFF_PADDING, COLORS } from "../constants";
+import { TrebleClefProps } from "../types";
+import { STAFF_PADDING, COLORS } from "../../constants";
 
 export const TrebleClef: FC<TrebleClefProps> = ({ cy }) => {
     const textY = cy + 15;

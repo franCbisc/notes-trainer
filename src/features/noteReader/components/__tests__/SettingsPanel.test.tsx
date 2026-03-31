@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { SettingsPanel } from "../SettingsPanel";
+import { SettingsPanel } from "../overlays/SettingsPanel";
 
 const defaultProps = {
     open: true,

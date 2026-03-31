@@ -3,14 +3,14 @@
  */
 
 import React, { FC, useMemo } from "react";
-import { NoteHeadProps } from "./types";
+import { NoteHeadProps } from "../types";
 import {
     HALF_SPACING,
     NOTE_X,
     NOTE_HEAD_RX,
     NOTE_HEAD_RY,
     COLORS,
-} from "../constants";
+} from "../../constants";
 
 export const NoteHead: FC<NoteHeadProps> = ({ step, cy, answerStatus }) => {
     const answered = answerStatus !== null;

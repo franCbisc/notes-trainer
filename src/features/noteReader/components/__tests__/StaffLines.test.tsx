@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { StaffLines } from "../StaffLines";
+import { StaffLines } from "../notation/StaffLines";
 import { HALF_SPACING, STAFF_PADDING, SVG_WIDTH } from "../../constants";
 
 const CY = 110;

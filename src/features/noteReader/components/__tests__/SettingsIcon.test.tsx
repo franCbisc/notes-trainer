@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { SettingsIcon } from "../SettingsIcon";
+import { SettingsIcon } from "../overlays/SettingsIcon";
 
 describe("SettingsIcon", () => {
     it("renders without errors", () => {

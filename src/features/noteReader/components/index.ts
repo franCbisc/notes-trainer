@@ -1,13 +1,16 @@
-export { GrandStaff } from "./GrandStaff";
-export { StaffLines } from "./StaffLines";
-export { NoteHead } from "./NoteHead";
-export { TrebleClef } from "./TrebleClef";
-export { BassClef } from "./BassClef";
-export { AnswersButtons } from "./AnswersButtons";
-export { KeySignatureAccidentals } from "./KeySignatureAccidentals";
-export { SettingsIcon } from "./SettingsIcon";
-export { MicPrompt } from "./MicPrompt";
-export { Header } from "./Header";
-export { CircleOfFifths } from "./CircleOfFifths";
-export { ListeningIndicator } from "./ListeningIndicator";
-export { Feedback } from "./Feedback";
+export { GrandStaff } from "./notation/GrandStaff";
+export { StaffLines } from "./notation/StaffLines";
+export { NoteHead } from "./notation/NoteHead";
+export { TrebleClef } from "./notation/TrebleClef";
+export { BassClef } from "./notation/BassClef";
+export { KeySignatureAccidentals } from "./notation/KeySignatureAccidentals";
+
+export { Header } from "./quiz/Header";
+export { AnswersButtons } from "./quiz/AnswersButtons";
+export { CircleOfFifths } from "./quiz/CircleOfFifths";
+export { ListeningIndicator } from "./quiz/ListeningIndicator";
+export { Feedback } from "./quiz/Feedback";
+
+export { SettingsIcon } from "./overlays/SettingsIcon";
+export { SettingsPanel } from "./overlays/SettingsPanel";
+export { MicPrompt } from "./overlays/MicPrompt";

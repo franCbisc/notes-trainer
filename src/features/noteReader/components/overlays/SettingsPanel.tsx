@@ -4,7 +4,7 @@
  */
 
 import React, { FC, useEffect, useRef } from "react";
-import type { SettingsPanelProps } from "./types";
+import type { SettingsPanelProps } from "../types";
 
 export const SettingsPanel: FC<SettingsPanelProps> = ({
     open,

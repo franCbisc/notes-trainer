@@ -5,8 +5,8 @@
  */
 
 import React, { FC } from "react";
-import { TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../constants";
-import type { KeySignatureAccidentalsProps } from "./types";
+import { TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../../constants";
+import type { KeySignatureAccidentalsProps } from "../types";
 
 /** Horizontal start position for the first accidental glyph */
 const KEY_SIG_X_START = 70;

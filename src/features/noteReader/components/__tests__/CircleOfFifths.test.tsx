@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { CircleOfFifths } from "../CircleOfFifths";
+import { CircleOfFifths } from "../quiz/CircleOfFifths";
 
 describe("CircleOfFifths", () => {
     const defaultProps = {

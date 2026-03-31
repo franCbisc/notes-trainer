@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { MicPrompt } from "../MicPrompt";
+import { MicPrompt } from "../overlays/MicPrompt";
 
 describe("MicPrompt", () => {
     const defaultProps = {

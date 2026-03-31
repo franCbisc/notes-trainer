@@ -10,7 +10,7 @@ import {
     CIRCLE_RADIUS_INNER_EXPANDED,
     CIRCLE_LABEL_RADIUS,
     CIRCLE_START_ANGLE_OFFSET,
-} from "../constants";
+} from "../../constants";
 
 const KEYS = [
     { key: "Do - Lam", label: "Do", relative: "Lam" },
