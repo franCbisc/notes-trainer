@@ -3,6 +3,7 @@
  */
 
 import type { Note, AnswerStatus, KeyAccidental, ClefFilter } from "../types";
+import type { QuizMode } from "../hooks/types";
 
 export interface StaffLinesProps {
     cy: number;
@@ -47,8 +48,8 @@ export interface SettingsIconProps {
 }
 
 export interface HeaderProps {
-    mode: "manual" | "automatic";
-    onModeChange: (mode: "manual" | "automatic") => void;
+    mode: QuizMode;
+    onModeChange: (mode: QuizMode) => void;
     clefFilter: ClefFilter;
     onClefChange: (clef: ClefFilter) => void;
 }
@@ -56,7 +57,7 @@ export interface HeaderProps {
 export interface SettingsPanelProps {
     open: boolean;
     onClose: () => void;
-    mode: "manual" | "automatic";
+    mode: QuizMode;
     clefFilter: ClefFilter;
     onClefChange: (clef: ClefFilter) => void;
     selectedKey: string;
@@ -69,6 +70,6 @@ export interface KeySignatureAccidentalsProps {
 
 export interface FeedbackProps {
     answered: AnswerStatus;
-    mode: "manual" | "automatic";
+    mode: QuizMode;
     selected: string | null;
 }
