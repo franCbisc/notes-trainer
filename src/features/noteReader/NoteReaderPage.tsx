@@ -2,7 +2,7 @@
  * NoteReaderPage - Main page component for the Note Reader quiz
  */
 
-import React, { FC, useMemo, useEffect } from "react";
+import React, { FC, useMemo, useEffect, useCallback } from "react";
 import { GrandStaff, AnswersButtons, MicPrompt, Header, CircleOfFifths, ListeningIndicator, Feedback } from "./components";
 import {
     useNoteGeneration,
@@ -34,7 +34,7 @@ export const NoteReaderPage: FC = () => {
 
     const { generateRandomNote } = useNoteGeneration(clefFilter, keyAccidentals);
     const { current, answered, selected, advance, handleAnswer } =
-        useQuizState(generateRandomNote);
+        useQuizState();
     const { detectedPitch, permission, startListening, stopListening, consumeNote } =
         usePitchDetection();
 

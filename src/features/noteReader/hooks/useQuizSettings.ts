@@ -6,8 +6,6 @@ import { useState, useCallback } from "react";
 import type { ClefFilter } from "../types";
 import type { QuizMode, QuizSettingsReturn } from "./types";
 
-export type { QuizMode } from "./types";
-
 export function useQuizSettings(): QuizSettingsReturn {
     const [clefFilter, setClefFilter] = useState<ClefFilter>("both");
     const [selectedKey, setSelectedKey] = useState<string>("Do");

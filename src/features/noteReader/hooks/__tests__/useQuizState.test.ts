@@ -3,8 +3,7 @@ import { useQuizState } from "../useQuizState";
 
 describe("useQuizState", () => {
     it("updates answered to correct when answer is correct", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
+        const { result } = renderHook(() => useQuizState());
 
         act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
 
@@ -16,8 +15,7 @@ describe("useQuizState", () => {
     });
 
     it("updates answered to wrong and sets selected when answer is incorrect", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
+        const { result } = renderHook(() => useQuizState());
 
         act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
 
@@ -30,8 +28,7 @@ describe("useQuizState", () => {
     });
 
     it("returns false when answered is already correct", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
+        const { result } = renderHook(() => useQuizState());
 
         act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
         act(() => { result.current.handleAnswer("Do"); });
@@ -43,8 +40,7 @@ describe("useQuizState", () => {
     });
 
     it("returns false when current is null (no note set yet)", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
+        const { result } = renderHook(() => useQuizState());
 
         let returned = true;
         act(() => { returned = result.current.handleAnswer("Do"); });
@@ -53,8 +49,7 @@ describe("useQuizState", () => {
     });
 
     it("advance resets answered and selected", () => {
-        const onNoteChange = jest.fn();
-        const { result } = renderHook(() => useQuizState(onNoteChange));
+        const { result } = renderHook(() => useQuizState());
 
         jest.useFakeTimers();
         act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
@@ -72,8 +67,7 @@ describe("useQuizState", () => {
         afterEach(() => jest.useRealTimers());
 
         it("a wrong answer resets answered to null after 1000 ms", () => {
-            const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
             act(() => { result.current.handleAnswer("Re"); });
@@ -88,7 +82,7 @@ describe("useQuizState", () => {
 
         it("a wrong answer does not reset before 1000 ms", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
             act(() => { result.current.handleAnswer("Re"); });
@@ -100,7 +94,7 @@ describe("useQuizState", () => {
 
         it("user can guess again after the flash resets", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
             act(() => { result.current.handleAnswer("Re"); });
@@ -117,7 +111,7 @@ describe("useQuizState", () => {
 
         it("calling advance cancels a pending wrong-flash timer", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
             act(() => { result.current.handleAnswer("Re"); });
@@ -135,7 +129,7 @@ describe("useQuizState", () => {
 
         it("a correct answer does not trigger the flash timer", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Do", clef: "treble" }); });
             act(() => { result.current.handleAnswer("Do"); });
@@ -151,7 +145,7 @@ describe("useQuizState", () => {
     describe("enharmonic equivalence", () => {
         it("accepts La# when the current note is Sib", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Sib", clef: "treble" }); });
 
@@ -164,7 +158,7 @@ describe("useQuizState", () => {
 
         it("accepts Sib when the current note is La#", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "La#", clef: "treble" }); });
 
@@ -177,7 +171,7 @@ describe("useQuizState", () => {
 
         it("accepts Re# when the current note is Mib", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Mib", clef: "treble" }); });
 
@@ -189,7 +183,7 @@ describe("useQuizState", () => {
 
         it("accepts Fa# when the current note is Solb", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Solb", clef: "treble" }); });
 
@@ -201,7 +195,7 @@ describe("useQuizState", () => {
 
         it("accepts Sol# when the current note is Lab", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Lab", clef: "treble" }); });
 
@@ -213,7 +207,7 @@ describe("useQuizState", () => {
 
         it("does not accept a completely wrong note even with enharmonics in scope", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Sib", clef: "treble", midi: 70 }); });
 
@@ -231,7 +225,7 @@ describe("useQuizState", () => {
 
         it("accepts the correct note in the correct octave (midi matches exactly)", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: -6, name: "Do", clef: "treble", midi: 60 }); });
 
@@ -243,7 +237,7 @@ describe("useQuizState", () => {
 
         it("rejects the correct note name in the wrong octave", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: -6, name: "Do", clef: "treble", midi: 60 }); });
 
@@ -256,7 +250,7 @@ describe("useQuizState", () => {
 
         it("accepts a note within ±6 semitones of the target midi", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: -6, name: "Do", clef: "treble", midi: 60 }); });
 
@@ -268,7 +262,7 @@ describe("useQuizState", () => {
 
         it("rejects a note 7 semitones above the target midi (different octave region)", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: -6, name: "Do", clef: "treble", midi: 60 }); });
 
@@ -280,7 +274,7 @@ describe("useQuizState", () => {
 
         it("skips octave check when playedMidi is undefined (manual mode)", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: -6, name: "Do", clef: "treble", midi: 60 }); });
 
@@ -292,7 +286,7 @@ describe("useQuizState", () => {
 
         it("octave check also works for enharmonic equivalents", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Sib", clef: "treble", midi: 70 }); });
 
@@ -304,7 +298,7 @@ describe("useQuizState", () => {
 
         it("rejects enharmonic equivalent in wrong octave", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "Sib", clef: "treble", midi: 70 }); });
 
@@ -316,7 +310,7 @@ describe("useQuizState", () => {
 
         it("falls back to note name when midiToNoteNameWithOctave returns null", () => {
             const onNoteChange = jest.fn();
-            const { result } = renderHook(() => useQuizState(onNoteChange));
+            const { result } = renderHook(() => useQuizState());
 
             act(() => { result.current.advance({ step: 0, name: "La", clef: "treble", midi: 69 }); });
 

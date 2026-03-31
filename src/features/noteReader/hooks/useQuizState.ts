@@ -50,7 +50,7 @@ function isCorrectOctave(playedMidi: number, targetMidi: number): boolean {
     return Math.abs(playedMidi - targetMidi) <= OCTAVE_TOLERANCE_SEMITONES;
 }
 
-export function useQuizState(onNoteChange: (note: Note) => void) {
+export function useQuizState() {
     const [current, setCurrent] = useState<Note | null>(null);
     const [answered, setAnswered] = useState<AnswerStatus>(null);
     const [selected, setSelected] = useState<string | null>(null);

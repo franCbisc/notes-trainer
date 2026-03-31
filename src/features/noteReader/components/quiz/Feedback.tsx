@@ -1,9 +1,10 @@
 import { FC } from "react";
 import type { AnswerStatus } from "../../types";
+import type { QuizMode } from "../../hooks/types";
 
 export interface FeedbackProps {
     answered: AnswerStatus;
-    mode: "manual" | "automatic";
+    mode: QuizMode;
     selected: string | null;
 }
 

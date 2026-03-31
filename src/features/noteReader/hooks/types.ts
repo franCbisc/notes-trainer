@@ -2,14 +2,14 @@
  * Hook-specific types for the noteReader feature.
  */
 
-import type { Note, ClefFilter, DetectedPitch } from "../types";
+import type { Note, ClefFilter, DetectedPitch, AnswerStatus } from "../types";
 import type { MicPermission } from "./useMicrophone";
 
 export type QuizMode = "manual" | "automatic";
 
 export interface UseQuizLifecycleProps {
     current: Note | null;
-    answered: "correct" | "wrong" | null;
+    answered: AnswerStatus;
     advance: (note: Note) => void;
     generateRandomNote: (previousNote?: Note) => Note;
     clefFilter: ClefFilter;
@@ -32,7 +32,7 @@ export interface UseAutomaticModeProps {
     mode: QuizMode;
     permission: MicPermission;
     detectedPitch: DetectedPitch | null;
-    answered: "correct" | "wrong" | null;
+    answered: AnswerStatus;
     onAnswer: (name: string, midi: number) => boolean;
     onConsumeNote: () => void;
     onStartListening: () => Promise<void>;
