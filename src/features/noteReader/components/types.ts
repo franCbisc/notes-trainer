@@ -37,8 +37,9 @@ export interface AnswersButtonsProps {
 }
 
 export interface MicPromptProps {
-    permission: "idle" | "granted" | "denied";
-    onRequestMic: () => void;
+    permission: "idle" | "requesting" | "granted" | "denied" | "unsupported";
+    onStartListening: () => Promise<void>;
+    onSwitchToManual: () => void;
 }
 
 export interface SettingsIconProps {
@@ -64,4 +65,10 @@ export interface SettingsPanelProps {
 
 export interface KeySignatureAccidentalsProps {
     accidentals: KeyAccidental[];
+}
+
+export interface FeedbackProps {
+    answered: AnswerStatus;
+    mode: "manual" | "automatic";
+    selected: string | null;
 }

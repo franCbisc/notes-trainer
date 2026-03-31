@@ -3,7 +3,7 @@
  */
 
 import React, { FC, useMemo, useEffect } from "react";
-import { GrandStaff, AnswersButtons, MicPrompt, Header, CircleOfFifths, ListeningIndicator } from "./components";
+import { GrandStaff, AnswersButtons, MicPrompt, Header, CircleOfFifths, ListeningIndicator, Feedback } from "./components";
 import {
     useNoteGeneration,
     useQuizState,
@@ -107,11 +107,11 @@ export const NoteReaderPage: FC = () => {
                 </div>
             )}
 
-            <div className="feedback" style={{ opacity: answered ? 1 : 0, pointerEvents: "none" }}>
-                {answered === "wrong" && mode === "automatic" && (
-                    <span className="wrong">✗ You played <strong>{selected}</strong></span>
-                )}
-            </div>
+            <Feedback
+                answered={answered}
+                mode={mode}
+                selected={selected}
+            />
 
             {mode === "manual" && (
                 <AnswersButtons

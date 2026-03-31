@@ -10,3 +10,4 @@ export { MicPrompt } from "./MicPrompt";
 export { Header } from "./Header";
 export { CircleOfFifths } from "./CircleOfFifths";
 export { ListeningIndicator } from "./ListeningIndicator";
+export { Feedback } from "./Feedback";
