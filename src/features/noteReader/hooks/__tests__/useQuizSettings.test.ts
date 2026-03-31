@@ -40,16 +40,6 @@ describe("useQuizSettings", () => {
         expect(result.current.mode).toBe("automatic");
     });
 
-    it("handleModeChange updates mode", () => {
-        const { result } = renderHook(() => useQuizSettings());
-
-        act(() => {
-            result.current.handleModeChange("automatic");
-        });
-
-        expect(result.current.mode).toBe("automatic");
-    });
-
     it("markFirstNotePlayed sets hasPlayedFirstNote to true", () => {
         const { result } = renderHook(() => useQuizSettings());
 

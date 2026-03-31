@@ -33,7 +33,7 @@ import {
     SILENCE_FRAMES_TO_REARM,
     OCTAVE_HISTORY_SIZE,
 } from "./pitchDetectionConstants";
-import type { UsePitchDetectionReturn } from "../types";
+import type { UsePitchDetectionReturn, DetectedPitch } from "../types";
 
 // ─── STATE MACHINE ────────────────────────────────────────────────────────────
 type DetectorState = "IDLE" | "EMITTED" | "WAITING_FOR_SILENCE";
@@ -60,12 +60,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
         useMicrophone();
 
     const [isListening, setIsListening] = useState(false);
-    const [detectedPitch, setDetectedPitch] = useState<{
-        note: string;
-        midi: number;
-        frequency: number;
-        clarity: number;
-    } | null>(null);
+    const [detectedPitch, setDetectedPitch] = useState<DetectedPitch | null>(null);
 
     const analyserRef = useRef<AnalyserNode | null>(null);
     const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);

@@ -20,10 +20,15 @@ function isSamePosition(currentGenerated: Note, previous: Note): boolean {
  * append the accidental symbol to the name (e.g. "Fa" → "Fa#") and shift
  * the midi value by ±1 semitone to match.
  */
-function applyKeySignature(note: Note, keyAccidentals: KeyAccidental[]): Note {
+export function applyKeySignature(note: Note, keyAccidentals: KeyAccidental[]): Note {
+    if (note.midi === undefined) {
+        return note;
+    }
     const baseName = note.name.replace(/[#b]+$/, "");
     const acc = keyAccidentals.find((a) => a.baseName === baseName);
-    if (!acc) return note;
+    if (!acc) {
+        return note;
+    }
     const midiShift = acc.accidental === "#" ? 1 : -1;
     return { ...note, name: baseName + acc.accidental, midi: note.midi + midiShift };
 }

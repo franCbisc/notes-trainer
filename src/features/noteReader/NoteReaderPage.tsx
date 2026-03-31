@@ -3,7 +3,7 @@
  */
 
 import React, { FC, useMemo, useEffect } from "react";
-import { GrandStaff, AnswersButtons, MicPrompt, Header, CircleOfFifths } from "./components";
+import { GrandStaff, AnswersButtons, MicPrompt, Header, CircleOfFifths, ListeningIndicator } from "./components";
 import {
     useNoteGeneration,
     useQuizState,
@@ -23,7 +23,6 @@ export const NoteReaderPage: FC = () => {
         setSelectedKey,
         mode,
         setMode,
-        handleModeChange,
         hasPlayedFirstNote,
         markFirstNotePlayed,
     } = useQuizSettings();
@@ -78,21 +77,16 @@ export const NoteReaderPage: FC = () => {
         <div className="root">
             <Header
                 mode={mode}
-                onModeChange={handleModeChange}
+                onModeChange={setMode}
                 clefFilter={clefFilter}
                 onClefChange={setClefFilter}
             />
 
             {mode === "automatic" && permission === "granted" && !hasPlayedFirstNote && (
-                <div className="listeningIndicator">
-                    {isListeningActive && <span className="listeningDot" />}
-                    <span>{isListeningActive ? "Listening…" : "Ready"}</span>
-                    {activePitch && (
-                        <span className="pitchDebug">
-                            {Math.round(activePitch.frequency)} Hz · {Math.round(activePitch.clarity * 100)}%
-                        </span>
-                    )}
-                </div>
+                <ListeningIndicator
+                    isListening={isListeningActive}
+                    detectedPitch={activePitch}
+                />
             )}
 
             <div className="staffCard">

@@ -17,7 +17,7 @@ export interface UseMicrophoneReturn {
     permission: MicPermission;
     audioContext: AudioContext | null;
     mediaStream: MediaStream | null;
-    requestMic: () => Promise<void>;
+    requestMic: () => Promise<MicPermission>;
     releaseMic: () => void;
 }
 
@@ -40,10 +40,10 @@ export function useMicrophone(): UseMicrophoneReturn {
         setAudioContext(null);
     }, []);
 
-    const requestMic = useCallback(async () => {
+    const requestMic = useCallback(async (): Promise<MicPermission> => {
         if (!navigator?.mediaDevices?.getUserMedia) {
             setPermission("unsupported");
-            return;
+            return "unsupported";
         }
 
         setPermission("requesting");
@@ -58,8 +58,10 @@ export function useMicrophone(): UseMicrophoneReturn {
             setMediaStream(stream);
             setAudioContext(ctx);
             setPermission("granted");
+            return "granted";
         } catch {
             setPermission("denied");
+            return "denied";
         }
     }, []);
 

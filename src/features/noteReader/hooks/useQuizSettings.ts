@@ -14,13 +14,6 @@ export function useQuizSettings(): QuizSettingsReturn {
     const [mode, setMode] = useState<QuizMode>("automatic");
     const [hasPlayedFirstNote, setHasPlayedFirstNote] = useState(false);
 
-    const handleModeChange = useCallback(
-        (newMode: QuizMode) => {
-            setMode(newMode);
-        },
-        [setMode]
-    );
-
     const markFirstNotePlayed = useCallback(() => {
         setHasPlayedFirstNote(true);
     }, []);
@@ -32,7 +25,6 @@ export function useQuizSettings(): QuizSettingsReturn {
         setSelectedKey,
         mode,
         setMode,
-        handleModeChange,
         hasPlayedFirstNote,
         markFirstNotePlayed,
     };

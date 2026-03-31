@@ -1,6 +1,7 @@
 import { renderHook } from "@testing-library/react";
-import { useNoteGeneration } from "../useNoteGeneration";
+import { useNoteGeneration, applyKeySignature } from "../useNoteGeneration";
 import { TREBLE_NOTES, BASS_NOTES } from "../../constants";
+import type { Note } from "../../types";
 
 describe("useNoteGeneration", () => {
     // ─── default (both) ────────────────────────────────────────────────────────
@@ -229,6 +230,33 @@ describe("useNoteGeneration – key signature", () => {
         const note = result.current.generateRandomNote();
         expect(typeof note.midi).toBe("number");
         expect(note.midi).toBeGreaterThanOrEqual(0);
+    });
+
+    it("does not modify note name when keyAccidentals don't match any note", () => {
+        const trebleNotes = TREBLE_NOTES as readonly { step: number; name: string }[];
+        const doIndex = trebleNotes.findIndex((n) => n.name === "Do");
+        const spy = jest.spyOn(Math, "random")
+            .mockReturnValueOnce(doIndex / trebleNotes.length);
+
+        const keyAccidentals = [{ baseName: "Fa", accidental: "#" as const, trebleStep: 4, bassStep: 2 }];
+        const { result } = renderHook(() => useNoteGeneration("treble", keyAccidentals));
+        const note = result.current.generateRandomNote();
+
+        expect(note.name).toBe("Do");
+        expect(note.midi).toBe(60);
+        spy.mockRestore();
+    });
+});
+
+describe("applyKeySignature", () => {
+    it("returns note as-is when midi is undefined", () => {
+        const note: Note = { step: 0, name: "Do", clef: "treble", midi: undefined };
+        const keyAccidentals = [{ baseName: "Fa", accidental: "#" as const, trebleStep: 4, bassStep: 2 }];
+
+        const result = applyKeySignature(note, keyAccidentals);
+
+        expect(result.name).toBe("Do");
+        expect(result.midi).toBeUndefined();
     });
 });
 

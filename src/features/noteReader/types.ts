@@ -3,14 +3,12 @@
  * Component-specific props are defined in their respective component files.
  */
 
-import type { useMicrophone } from "./hooks/useMicrophone";
-
 export interface Note {
     step: number;
     name: string;
     clef: "treble" | "bass";
     /** MIDI note number for the specific octave shown on the staff (e.g. 60 = C4). */
-    midi: number;
+    midi?: number;
 }
 
 export type AnswerStatus = "correct" | "wrong" | null;
@@ -27,7 +25,7 @@ export interface DetectedPitch {
 export interface UsePitchDetectionReturn {
     detectedPitch: DetectedPitch | null;
     isListening: boolean;
-    permission: ReturnType<typeof useMicrophone>["permission"];
+    permission: "idle" | "requesting" | "granted" | "denied" | "unsupported";
     startListening: () => Promise<void>;
     stopListening: () => void;
     consumeNote: () => void;

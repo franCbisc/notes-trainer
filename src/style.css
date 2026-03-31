@@ -154,6 +154,9 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .modeLabelActive {
@@ -607,15 +610,9 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
   width: 100%;
   max-width: 360px;
-  margin-top: 20px;
   padding: 28px 24px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: 0 2px 16px #b8892a0d;
   text-align: center;
 }
 

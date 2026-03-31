@@ -74,7 +74,7 @@ export function useQuizState(onNoteChange: (note: Note) => void) {
             }
 
             const nameMatches = isSamePitch(name, current.name);
-            const octaveMatches = playedMidi === undefined || isCorrectOctave(playedMidi, current.midi);
+            const octaveMatches = playedMidi === undefined || current.midi === undefined || isCorrectOctave(playedMidi, current.midi);
             const isCorrect = nameMatches && octaveMatches;
             const playedNoteDisplay = playedMidi !== undefined
                 ? (midiToNoteNameWithOctave(playedMidi) ?? name)

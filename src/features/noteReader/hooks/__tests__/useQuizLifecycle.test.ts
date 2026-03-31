@@ -145,4 +145,78 @@ describe("useQuizLifecycle", () => {
 
         jest.useRealTimers();
     });
+
+    it("advances when clefFilter changes", () => {
+        const advance = jest.fn();
+        const generateRandomNote = jest.fn().mockReturnValue(createNote());
+
+        type Props = { clefFilter: "both" | "treble" | "bass" };
+        const { rerender } = renderHook(
+            ({ clefFilter }: Props) =>
+                useQuizLifecycle({
+                    current: createNote(),
+                    answered: null,
+                    advance,
+                    generateRandomNote,
+                    clefFilter,
+                    selectedKey: "Do",
+                    mode: "manual",
+                }),
+            { initialProps: { clefFilter: "both" } as Props }
+        );
+
+        advance.mockClear();
+        rerender({ clefFilter: "treble" });
+
+        expect(advance).toHaveBeenCalled();
+    });
+
+    it("advances when selectedKey changes", () => {
+        const advance = jest.fn();
+        const generateRandomNote = jest.fn().mockReturnValue(createNote());
+
+        const { rerender } = renderHook(
+            ({ selectedKey }: { selectedKey: string }) =>
+                useQuizLifecycle({
+                    current: createNote(),
+                    answered: null,
+                    advance,
+                    generateRandomNote,
+                    clefFilter: "both",
+                    selectedKey,
+                    mode: "manual",
+                }),
+            { initialProps: { selectedKey: "Do" } }
+        );
+
+        advance.mockClear();
+        rerender({ selectedKey: "Sol" });
+
+        expect(advance).toHaveBeenCalled();
+    });
+
+    it("advances when mode changes", () => {
+        const advance = jest.fn();
+        const generateRandomNote = jest.fn().mockReturnValue(createNote());
+
+        type Props = { mode: "manual" | "automatic" };
+        const { rerender } = renderHook(
+            ({ mode }: Props) =>
+                useQuizLifecycle({
+                    current: createNote(),
+                    answered: null,
+                    advance,
+                    generateRandomNote,
+                    clefFilter: "both",
+                    selectedKey: "Do",
+                    mode,
+                }),
+            { initialProps: { mode: "manual" } as Props }
+        );
+
+        advance.mockClear();
+        rerender({ mode: "automatic" });
+
+        expect(advance).toHaveBeenCalled();
+    });
 });

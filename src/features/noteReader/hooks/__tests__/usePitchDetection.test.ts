@@ -27,7 +27,7 @@ jest.mock("../../utils/pitchUtils", () => {
 });
 
 // ─── Mock useMicrophone ────────────────────────────────────────────────────────
-const mockRequestMic = jest.fn();
+const mockRequestMic = jest.fn().mockResolvedValue("granted");
 const mockReleaseMic = jest.fn();
 let mockPermission: string = "idle";
 let mockAudioContext: unknown = null;

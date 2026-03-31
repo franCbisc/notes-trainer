@@ -3,6 +3,14 @@
  */
 
 import React, { FC, useState, useEffect, useRef } from "react";
+import {
+    CIRCLE_SLICES,
+    CIRCLE_RADIUS_OUTER,
+    CIRCLE_RADIUS_INNER_COLLAPSED,
+    CIRCLE_RADIUS_INNER_EXPANDED,
+    CIRCLE_LABEL_RADIUS,
+    CIRCLE_START_ANGLE_OFFSET,
+} from "../constants";
 
 const KEYS = [
     { key: "Do - Lam", label: "Do", relative: "Lam" },
@@ -55,17 +63,17 @@ export const CircleOfFifths: FC<CircleOfFifthsProps> = ({ selectedKey, onKeySele
             xmlns="http://www.w3.org/2000/svg"
         >
             {expanded && KEYS.map((k, i) => {
-                const startAngle = i * 30 - 105;
-                const endAngle = (i + 1) * 30 - 105;
+                const startAngle = i * (360 / CIRCLE_SLICES) + CIRCLE_START_ANGLE_OFFSET;
+                const endAngle = (i + 1) * (360 / CIRCLE_SLICES) + CIRCLE_START_ANGLE_OFFSET;
                 
-                const x1 = 50 + 45 * Math.cos((startAngle * Math.PI) / 180);
-                const y1 = 50 + 45 * Math.sin((startAngle * Math.PI) / 180);
-                const x2 = 50 + 45 * Math.cos((endAngle * Math.PI) / 180);
-                const y2 = 50 + 45 * Math.sin((endAngle * Math.PI) / 180);
+                const x1 = 50 + CIRCLE_RADIUS_OUTER * Math.cos((startAngle * Math.PI) / 180);
+                const y1 = 50 + CIRCLE_RADIUS_OUTER * Math.sin((startAngle * Math.PI) / 180);
+                const x2 = 50 + CIRCLE_RADIUS_OUTER * Math.cos((endAngle * Math.PI) / 180);
+                const y2 = 50 + CIRCLE_RADIUS_OUTER * Math.sin((endAngle * Math.PI) / 180);
                 
                 const labelAngle = ((startAngle + endAngle) / 2 * Math.PI) / 180;
-                const labelX = 50 + 32 * Math.cos(labelAngle);
-                const labelY = 50 + 32 * Math.sin(labelAngle);
+                const labelX = 50 + CIRCLE_LABEL_RADIUS * Math.cos(labelAngle);
+                const labelY = 50 + CIRCLE_LABEL_RADIUS * Math.sin(labelAngle);
                 
                 return (
                     <g key={k.key}>
@@ -98,7 +106,7 @@ export const CircleOfFifths: FC<CircleOfFifthsProps> = ({ selectedKey, onKeySele
             <circle 
                 cx="50" 
                 cy="50" 
-                r={expanded ? "20" : "28"} 
+                r={expanded ? CIRCLE_RADIUS_INNER_EXPANDED : CIRCLE_RADIUS_INNER_COLLAPSED} 
                 className={`circleCenter${expanded ? " circleCenterExpanded" : ""}`}
                 onClick={() => setExpanded(!expanded)}
             />

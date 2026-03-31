@@ -12,9 +12,9 @@ export interface UseQuizLifecycleProps {
     answered: "correct" | "wrong" | null;
     advance: (note: Note) => void;
     generateRandomNote: (previousNote?: Note) => Note;
-    clefFilter: string;
+    clefFilter: ClefFilter;
     selectedKey: string;
-    mode: string;
+    mode: QuizMode;
 }
 
 export interface QuizSettingsReturn {
@@ -24,7 +24,6 @@ export interface QuizSettingsReturn {
     setSelectedKey: (key: string) => void;
     mode: QuizMode;
     setMode: (mode: QuizMode) => void;
-    handleModeChange: (mode: QuizMode) => void;
     hasPlayedFirstNote: boolean;
     markFirstNotePlayed: () => void;
 }
