@@ -1,0 +1,36 @@
+{
+  // Enable ESLint as a formatter and linting provider
+  "eslint.enable": true,
+  "eslint.validate": ["typescript", "typescriptreact"],
+
+  // Show ESLint errors as problems in VS Code
+  "eslint.problems.showSuggestions": true,
+  "eslint.problems.showGlobals": true,
+
+  // Run ESLint on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Show linting errors inline in the editor
+  "editor.lint.enabled": true,
+
+  // Enable TypeScript JavaScript (built-in) for JS/TS files
+  "javascript.validate.enable": true,
+
+  // Show TypeScript errors inline
+  "typescript.validate.enable": true,
+  "typescript.suggest.autoImports": true,
+
+  // Disable default JS/TS formatter to let ESLint handle it
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+
+  // Format on save using ESLint
+  "editor.formatOnSave": false,
+
+  // Show errors and warnings in the minimap
+  " Minimap": {
+    "showErrors": true,
+    "showWarnings": true
+  }
+}
