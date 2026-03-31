@@ -106,6 +106,33 @@ describe("useMicrophone", () => {
         expect(result.current.mediaStream).toBeNull();
     });
 
+    it("sets permission to denied and cleans up stream when AudioContext fails to create", async () => {
+        const mockStop = jest.fn();
+        const stream = { getTracks: () => [{ stop: mockStop }] } as unknown as MediaStream;
+
+        Object.defineProperty(navigator, "mediaDevices", {
+            value: { getUserMedia: jest.fn().mockResolvedValue(stream) },
+            configurable: true,
+        });
+
+        const originalAudioContext = global.AudioContext;
+        (global as unknown as Record<string, unknown>)["AudioContext"] = jest.fn().mockImplementation(() => {
+            throw new Error("AudioContext not allowed");
+        });
+
+        const { result } = renderHook(() => useMicrophone());
+
+        await act(async () => {
+            await result.current.requestMic();
+        });
+
+        expect(result.current.permission).toBe("denied");
+        expect(result.current.audioContext).toBeNull();
+        expect(mockStop).toHaveBeenCalledTimes(1);
+
+        (global as unknown as Record<string, unknown>)["AudioContext"] = originalAudioContext;
+    });
+
     it("releaseMic stops all tracks and closes the AudioContext", async () => {
         const mockStop = jest.fn();
         const stream = { getTracks: () => [{ stop: mockStop }] } as unknown as MediaStream;

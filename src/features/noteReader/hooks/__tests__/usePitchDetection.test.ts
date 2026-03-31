@@ -1,10 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 import { usePitchDetection } from "../usePitchDetection";
 import {
-    DETECTION_INTERVAL_MS,
     STABLE_FRAMES,
     SILENCE_FRAMES_TO_REARM,
 } from "../pitchDetectionConstants";
+import { DETECTION_INTERVAL_MS } from "../../timing";
 
 // ─── Mock pitchUtils (use real implementations, but allow per-test overrides) ─
 let forceFrequencyToNoteNull = false;

@@ -26,7 +26,6 @@ export function useMicrophone(): UseMicrophoneReturn {
     const audioContextRef = useRef<AudioContext | null>(null);
     const mediaStreamRef = useRef<MediaStream | null>(null);
 
-    // Derived state exposed to consumers
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
@@ -50,7 +49,14 @@ export function useMicrophone(): UseMicrophoneReturn {
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-            const ctx = new AudioContext();
+            let ctx: AudioContext | null = null;
+            try {
+                ctx = new AudioContext();
+            } catch {
+                stream.getTracks().forEach((t) => t.stop());
+                setPermission("denied");
+                return "denied";
+            }
 
             mediaStreamRef.current = stream;
             audioContextRef.current = ctx;
@@ -65,13 +71,12 @@ export function useMicrophone(): UseMicrophoneReturn {
         }
     }, []);
 
-    // Cleanup on unmount
     useEffect(() => {
         return () => {
-            releaseMic();
+            mediaStreamRef.current?.getTracks().forEach((t) => t.stop());
+            audioContextRef.current?.close();
         };
-    }, [releaseMic]);
+    }, []);
 
     return { permission, audioContext, mediaStream, requestMic, releaseMic };
 }
-

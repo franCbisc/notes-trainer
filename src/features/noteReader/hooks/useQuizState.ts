@@ -5,9 +5,7 @@
 import { useState, useCallback, useRef } from "react";
 import { Note, AnswerStatus } from "../types";
 import { midiToNoteNameWithOctave } from "../utils/pitchUtils";
-
-/** Duration (ms) of the wrong-answer flash before the quiz resumes listening. */
-const WRONG_FLASH_MS = 1000;
+import { WRONG_ANSWER_FLASH_MS } from "../timing";
 
 /**
  * Enharmonic equivalents in Italian notation (both directions).
@@ -89,7 +87,7 @@ export function useQuizState() {
                     wrongFlashTimerRef.current = null;
                     setAnswered(null);
                     setSelected(null);
-                }, WRONG_FLASH_MS);
+                }, WRONG_ANSWER_FLASH_MS);
             }
 
             return isCorrect;

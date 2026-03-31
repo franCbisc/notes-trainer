@@ -28,11 +28,11 @@ import {
 } from "../utils/pitchUtils";
 import {
     BUFFER_SIZE,
-    DETECTION_INTERVAL_MS,
     STABLE_FRAMES,
     SILENCE_FRAMES_TO_REARM,
     OCTAVE_HISTORY_SIZE,
 } from "./pitchDetectionConstants";
+import { DETECTION_INTERVAL_MS } from "../timing";
 import type { UsePitchDetectionReturn, DetectedPitch } from "../types";
 
 // ─── STATE MACHINE ────────────────────────────────────────────────────────────

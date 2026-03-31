@@ -4,8 +4,7 @@
 
 import { useEffect, useRef } from "react";
 import type { UseQuizLifecycleProps } from "./types";
-
-const ADVANCE_DELAY_MS = 300;
+import { CORRECT_ANSWER_ADVANCE_DELAY_MS } from "../timing";
 
 export function useQuizLifecycle({
     current,
@@ -44,7 +43,7 @@ export function useQuizLifecycle({
 
         const timer = setTimeout(() => {
             advance(generateRandomNote(current ?? undefined));
-        }, ADVANCE_DELAY_MS);
+        }, CORRECT_ANSWER_ADVANCE_DELAY_MS);
         return () => clearTimeout(timer);
     }, [answered, advance, generateRandomNote, current]);
 }

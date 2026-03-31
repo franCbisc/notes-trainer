@@ -1,8 +1,7 @@
+import { DETECTION_INTERVAL_MS } from "../timing";
+
 /** Larger buffer = better low-note accuracy (~186ms window @ 44.1kHz). */
 export const BUFFER_SIZE = 8192;
-
-/** Fixed interval, decoupled from screen refresh rate. */
-export const DETECTION_INTERVAL_MS = 80;
 
 /** Consecutive frames required before emitting a note. */
 export const STABLE_FRAMES = 4;
