@@ -88,6 +88,7 @@ export const CircleOfFifths: FC<CircleOfFifthsProps> = ({ selectedKey, onKeySele
                             className="circleSliceLabel"
                             textAnchor="middle"
                             dominantBaseline="middle"
+                            style={selectedKey === k.key ? { fill: "#fff" } : undefined}
                         >
                             {k.label}
                         </text>
@@ -97,6 +98,7 @@ export const CircleOfFifths: FC<CircleOfFifthsProps> = ({ selectedKey, onKeySele
                             className="circleSliceLabel circleSliceRelative"
                             textAnchor="middle"
                             dominantBaseline="middle"
+                            style={selectedKey === k.key ? { fill: "rgba(255,255,255,0.8)" } : undefined}
                         >
                             {k.relative}
                         </text>
