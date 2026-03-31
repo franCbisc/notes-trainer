@@ -2,7 +2,7 @@
  * GrandStaff component - assembles treble and bass staves with clefs and note
  */
 
-import React, { FC } from "react";
+import { FC } from "react";
 import type { GrandStaffProps } from "../../types";
 import { StaffLines } from "./StaffLines";
 import { NoteHead } from "./NoteHead";

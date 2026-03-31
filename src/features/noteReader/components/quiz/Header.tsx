@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import type { HeaderProps } from "../../types";
 
 export const Header: FC<HeaderProps> = ({

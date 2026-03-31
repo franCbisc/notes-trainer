@@ -2,7 +2,7 @@
  * StaffLines component - renders the 5 lines of a musical staff
  */
 
-import React, { FC } from "react";
+import { FC } from "react";
 import type { StaffLinesProps } from "../../types";
 import { HALF_SPACING, STAFF_PADDING, SVG_WIDTH, COLORS } from "../../constants";
 

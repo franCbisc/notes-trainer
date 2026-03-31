@@ -2,7 +2,7 @@
  * BassClef component - renders the bass clef symbol (𝄢)
  */
 
-import React, { FC } from "react";
+import { FC } from "react";
 import { STAFF_PADDING, COLORS } from "../../constants";
 
 export const BassClef: FC = () => {

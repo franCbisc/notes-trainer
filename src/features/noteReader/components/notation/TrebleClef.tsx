@@ -2,7 +2,7 @@
  * TrebleClef component - renders the treble clef symbol (𝄞)
  */
 
-import React, { FC } from "react";
+import { FC } from "react";
 import type { TrebleClefProps } from "../../types";
 import { STAFF_PADDING, COLORS } from "../../constants";
 

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 
 export const SettingsIcon: FC = () => (
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">

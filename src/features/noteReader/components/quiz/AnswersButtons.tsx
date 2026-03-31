@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import type { AnswersButtonsProps } from "../../types";
 
 export const AnswersButtons: FC<AnswersButtonsProps> = ({

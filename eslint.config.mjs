@@ -13,8 +13,8 @@ export default [
       "react-hooks": reactHooksPlugin,
     },
     rules: {
-      "@typescript-eslint/no-unused-vars": "warn",
-      "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/no-unused-vars": "error",
+      "react-hooks/exhaustive-deps": "error",
     },
   },
 ];

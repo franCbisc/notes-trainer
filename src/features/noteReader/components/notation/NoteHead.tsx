@@ -2,7 +2,7 @@
  * NoteHead component - renders a single note with stem and ledger lines
  */
 
-import React, { FC, useMemo } from "react";
+import { FC, useMemo, type ReactNode } from "react";
 import type { NoteHeadProps } from "../../types";
 import {
     HALF_SPACING,
@@ -28,7 +28,7 @@ export const NoteHead: FC<NoteHeadProps> = ({ step, cy, answerStatus }) => {
 
     // Supplementary lines (ledger lines) for notes outside the staff
     const ledgerLines = useMemo(() => {
-        const lines: React.ReactNode[] = [];
+        const lines: ReactNode[] = [];
 
         if (step > 4) {
             for (let s = 6; s <= step; s += 2) {

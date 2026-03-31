@@ -4,7 +4,7 @@
  * for the selected key signature.
  */
 
-import React, { FC } from "react";
+import { FC } from "react";
 import { TREBLE_CY, BASS_CY, HALF_SPACING, COLORS } from "../../constants";
 import type { KeySignatureAccidentalsProps } from "../../types";
 

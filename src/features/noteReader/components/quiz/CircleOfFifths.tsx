@@ -2,7 +2,7 @@
  * CircleOfFifths - Circular visual key signature picker with 12 pie-slice quadrants
  */
 
-import React, { FC, useState, useEffect, useRef } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 import {
     CIRCLE_SLICES,
     CIRCLE_RADIUS_OUTER,

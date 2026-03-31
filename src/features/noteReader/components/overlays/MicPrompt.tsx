@@ -1,7 +1,8 @@
-import React, { FC } from "react";
+import { FC } from "react";
+import type { MicPermission } from "../../types";
 
 export interface MicPromptProps {
-    permission: "idle" | "requesting" | "granted" | "denied" | "unsupported";
+    permission: MicPermission;
     onStartListening: () => Promise<void>;
     onSwitchToManual: () => void;
 }

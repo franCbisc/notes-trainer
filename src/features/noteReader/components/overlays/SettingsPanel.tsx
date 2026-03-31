@@ -3,7 +3,7 @@
  * Triggered by a ⚙ button in the header; closes on outside click or Escape.
  */
 
-import React, { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef } from "react";
 import type { SettingsPanelProps } from "../../types";
 
 export const SettingsPanel: FC<SettingsPanelProps> = ({
