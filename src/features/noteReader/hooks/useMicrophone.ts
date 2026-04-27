@@ -28,15 +28,19 @@ export function useMicrophone(): UseMicrophoneReturn {
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
-    const releaseMic = useCallback(() => {
+    const cleanup = useCallback(() => {
         mediaStreamRef.current?.getTracks().forEach((t) => t.stop());
         mediaStreamRef.current = null;
-        setMediaStream(null);
 
         audioContextRef.current?.close();
         audioContextRef.current = null;
-        setAudioContext(null);
     }, []);
+
+    const releaseMic = useCallback(() => {
+        cleanup();
+        setMediaStream(null);
+        setAudioContext(null);
+    }, [cleanup]);
 
     const requestMic = useCallback(async (): Promise<MicPermission> => {
         if (!navigator?.mediaDevices?.getUserMedia) {
@@ -72,10 +76,11 @@ export function useMicrophone(): UseMicrophoneReturn {
 
     useEffect(() => {
         return () => {
-            mediaStreamRef.current?.getTracks().forEach((t) => t.stop());
-            audioContextRef.current?.close();
+            cleanup();
+            setMediaStream(null);
+            setAudioContext(null);
         };
-    }, []);
+    }, [cleanup]);
 
     return { permission, audioContext, mediaStream, requestMic, releaseMic };
 }
