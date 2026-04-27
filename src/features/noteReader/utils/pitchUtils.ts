@@ -15,6 +15,14 @@
  *   A# / Bb → La#
  */
 
+import {
+    A4_FREQUENCY,
+    A4_MIDI_NUMBER,
+    SEMITONES_PER_OCTAVE,
+    MIDI_MIN,
+    MIDI_MAX,
+} from "../hooks/pitchDetectionConstants";
+
 /** Minimum clarity (0–1) from pitchy for a pitch to be considered valid. */
 export const MIN_CLARITY = 0.9;
 
@@ -59,20 +67,20 @@ const SEMITONE_TO_ITALIAN: readonly string[] = [
  * Converts a frequency in Hz to the closest MIDI note number.
  * Returns -1 when the frequency is ≤ 0.
  *
- * Formula: midi = 69 + 12 * log2(f / 440)
+ * Formula: midi = A4_MIDI_NUMBER + SEMITONES_PER_OCTAVE * log2(f / A4_FREQUENCY)
  */
 export function frequencyToMidi(frequencyHz: number): number {
     if (frequencyHz <= 0) return -1;
-    return Math.round(69 + 12 * Math.log2(frequencyHz / 440));
+    return Math.round(A4_MIDI_NUMBER + SEMITONES_PER_OCTAVE * Math.log2(frequencyHz / A4_FREQUENCY));
 }
 
 /**
  * Maps a MIDI note number to an Italian note name (e.g. "Do", "Fa#", "Si").
- * Returns `null` when the MIDI value is out of range (< 0 or > 127).
+ * Returns `null` when the MIDI value is out of range (< MIDI_MIN or > MIDI_MAX).
  */
 export function midiToNoteName(midi: number): string | null {
-    if (midi < 0 || midi > 127) return null;
-    const semitone = midi % 12;
+    if (midi < MIDI_MIN || midi > MIDI_MAX) return null;
+    const semitone = midi % SEMITONES_PER_OCTAVE;
     return SEMITONE_TO_ITALIAN[semitone];
 }
 
@@ -102,7 +110,7 @@ export function frequencyToNoteWithMidi(frequencyHz: number): { name: string; mi
 export function midiToNoteNameWithOctave(midi: number): string | null {
     const name = midiToNoteName(midi);
     if (name === null) return null;
-    const octave = Math.floor(midi / 12) - 1;
+    const octave = Math.floor(midi / SEMITONES_PER_OCTAVE) - 1;
     return `${name}${octave}`;
 }
 

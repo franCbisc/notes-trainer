@@ -31,6 +31,9 @@ import {
     STABLE_FRAMES,
     SILENCE_FRAMES_TO_REARM,
     OCTAVE_HISTORY_SIZE,
+    A4_FREQUENCY,
+    A4_MIDI_NUMBER,
+    SEMITONES_PER_OCTAVE,
 } from "./pitchDetectionConstants";
 import { DETECTION_INTERVAL_MS } from "../timing";
 import type { UsePitchDetectionReturn, DetectedPitch } from "../types";
@@ -49,8 +52,8 @@ function median(arr: number[]): number {
 function correctOctaveError(candidateMidi: number, history: number[]): number {
     if (history.length < 3) return candidateMidi;
     const med = median(history);
-    if (Math.abs(candidateMidi - med) === 12) {
-        return candidateMidi > med ? candidateMidi - 12 : candidateMidi + 12;
+    if (Math.abs(candidateMidi - med) === SEMITONES_PER_OCTAVE) {
+        return candidateMidi > med ? candidateMidi - SEMITONES_PER_OCTAVE : candidateMidi + SEMITONES_PER_OCTAVE;
     }
     return candidateMidi;
 }
@@ -144,7 +147,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
                         ];
 
                         const correctedFreqName = frequencyToNoteWithMidi(
-                            440 * Math.pow(2, (correctedMidi - 69) / 12),
+                            A4_FREQUENCY * Math.pow(2, (correctedMidi - A4_MIDI_NUMBER) / SEMITONES_PER_OCTAVE),
                         )?.name;
                         const note = correctedMidi === raw.midi
                             ? raw.name
