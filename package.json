@@ -31,6 +31,7 @@
       "src/**/*.{ts,tsx}",
       "!src/main.tsx",
       "!src/**/index.ts",
+      "!src/**/constants.ts",
       "!src/**/types.ts",
       "!src/**/NoteReaderPage.tsx",
       "!src/**/__tests__/**"

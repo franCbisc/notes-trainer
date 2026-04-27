@@ -76,6 +76,14 @@ export function usePitchDetection(): UsePitchDetectionReturn {
     const candidateFramesRef = useRef<number>(0);
     const silenceFramesRef = useRef<number>(0);
     const midiHistoryRef = useRef<number[]>([]);
+    const isMountedRef = useRef(true);
+
+    useEffect(() => {
+        isMountedRef.current = true;
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
 
     // ── Teardown ──────────────────────────────────────────────────────────────
     const teardown = useCallback(() => {
@@ -227,6 +235,7 @@ export function usePitchDetection(): UsePitchDetectionReturn {
 
     const startListening = useCallback(async () => {
         await requestMic();
+        if (!isMountedRef.current) return;
         setIsListening(true);
     }, [requestMic]);
 
