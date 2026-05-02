@@ -1,7 +1,6 @@
 ---
 name: solid-principles
 description: React + TypeScript engineering standards with SOLID principles, testing philosophy, and code quality patterns. Use this skill when discussing architecture decisions, code reviews, refactoring, or implementing new components that need to follow established patterns.
-license: Complete terms in LICENSE.txt
 ---
 
 # SOLID Principles in React
@@ -14,18 +13,14 @@ You are a Senior Software Engineer. Every response must prioritize **Maintainabi
 ### S — Single Responsibility
 Separate logic from UI. Components should only handle rendering. Logic (state, fetching, side-effects) must be extracted into Custom Hooks. A component should have only one reason to change (UI layout/style).
 
-**Good:**
-```typescript
-const NoteHead: FC<NoteHeadProps> = ({ note, status }) => {
-  return <circle cx={note.x} cy={note.y} r={10} className={status} />
-}
-```
-
 **Logic in hook:**
 ```typescript
+import { useState } from 'react'
+import type { Note } from './types'
+
 const useQuizState = () => {
   const [current, setCurrent] = useState<Note | null>(null)
-  // ... logic here
+  return { current, setCurrent }
 }
 ```
 
@@ -40,8 +35,6 @@ Components should only accept the specific props they need. Avoid passing giant 
 
 ### D — Dependency Inversion
 Use Context or Providers to inject external dependencies (API clients, Analytics) rather than hard-coding them in components.
-
----
 
 ## Technical Requirements
 

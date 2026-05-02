@@ -62,16 +62,13 @@ src/features/noteReader/
 
 ## Component Patterns
 ```typescript
-// Good: Hook extracts logic
-const NoteHead: FC<NoteHeadProps> = ({ note, status }) => {
-  // Only rendering logic here
-  return <circle cx={note.x} cy={note.y} r={10} className={status} />
-}
-
 // Logic in custom hook
+import { useState } from 'react'
+import type { Note } from './types'
+
 const useQuizState = () => {
   const [current, setCurrent] = useState<Note | null>(null)
-  // ... logic here
+  return { current, setCurrent }
 }
 ```
 
